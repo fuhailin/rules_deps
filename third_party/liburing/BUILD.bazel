@@ -1,0 +1,16 @@
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+exports_files(
+    [
+        "liburing.BUILD",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+build_test(
+    name = "build_test",
+    targets = [
+        "@liburing//:liburing",
+    ],
+    visibility = ["//:__pkg__"],
+)

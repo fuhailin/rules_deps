@@ -1,0 +1,17 @@
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+
+
+exports_files(
+    [
+        "m4.BUILD",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+build_test(
+    name = "build_test",
+    targets = [
+        "@org_gnu_m4//:m4",
+    ],
+    visibility = ["//:__pkg__"],
+)

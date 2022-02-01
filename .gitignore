@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+# Bazel
+node_modules
+/bazel-*
+/bazel-workspace
+/third_party/py/numpy/numpy_include
+/util/python/python_include
+/util/python/python_lib
