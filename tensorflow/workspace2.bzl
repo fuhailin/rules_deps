@@ -1079,7 +1079,6 @@ def _tf_repositories():
     http_archive(
         name = "rapidjson",
         urls = [
-            "https://github.com.cnpmjs.org/Tencent/rapidjson/archive/{}.tar.gz".format("00dbcf2c6e03c47d6c399338b6de060c71356464"),
             "https://github.com/Tencent/rapidjson/archive/{}.tar.gz".format("00dbcf2c6e03c47d6c399338b6de060c71356464"),
         ],
         strip_prefix = "rapidjson-" + "00dbcf2c6e03c47d6c399338b6de060c71356464",

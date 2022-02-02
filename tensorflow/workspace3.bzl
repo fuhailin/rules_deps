@@ -83,10 +83,10 @@ def workspace():
         urls = ["https://github.com/grailbio/bazel-compilation-database/archive/0.5.2.tar.gz"],
     )
 
-    native.local_repository(
-        name = "cpp3rd_lib",
-        path = "/root/fuhailin/projects/cpp3rd_lib",
-    )
+    # native.local_repository(
+    #     name = "cpp3rd_lib",
+    #     path = "/root/fuhailin/projects/cpp3rd_lib",
+    # )
     # git_repository(
     #     name = "cpp3rd_lib",
     #     commit = "10cec0e759d8048295e3fef6b32273bd455542e7",
