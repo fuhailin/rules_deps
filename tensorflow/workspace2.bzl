@@ -846,9 +846,9 @@ def _tf_repositories():
     tf_http_archive(
         name = "nlohmann_json_lib",
         build_file = "//third_party:nlohmann_json.BUILD",
-        sha256 = "c377963a95989270c943d522bfefe7b889ef5ed0e1e15d535fd6f6f16ed70732",
-        strip_prefix = "json-3.4.0",
-        urls = tf_mirror_urls("https://github.com/nlohmann/json/archive/v3.4.0.tar.gz"),
+        sha256 = "d51a3a8d3efbb1139d7608e28782ea9efea7e7933157e8ff8184901efd8ee760",
+        strip_prefix = "json-3.7.0",
+        urls = tf_mirror_urls("https://github.com/nlohmann/json/archive/v3.7.0.tar.gz"),
     )
 
     tf_http_archive(
@@ -904,7 +904,8 @@ def _tf_repositories():
     http_archive(
         name = "com_github_fmtlib_fmt",
         strip_prefix = "fmt-8.0.1",
-        build_file = "//third_party:fmt.BUILD",
+        sha256 = "b06ca3130158c625848f3fb7418f235155a4d389b2abc3a6245fb01cb0eb1e01",
+        build_file = Label("//third_party:fmt.BUILD"),
         urls = ["https://github.com/fmtlib/fmt/archive/refs/tags/8.0.1.tar.gz"],
     )
 
@@ -919,7 +920,7 @@ def _tf_repositories():
         name = "libssh2",
         sha256 = "d5fb8bd563305fd1074dda90bd053fb2d29fc4bce048d182f96eaa466dfadafd",
         strip_prefix = "libssh2-1.9.0",
-        build_file = "//third_party:libssh2.BUILD",
+        build_file = Label("//third_party:libssh2.BUILD"),
         urls = [
             "https://github.com/libssh2/libssh2/releases/download/libssh2-1.9.0/libssh2-1.9.0.tar.gz",
         ],
@@ -929,7 +930,7 @@ def _tf_repositories():
         name = "libgit2",
         sha256 = "ad73f845965cfd528e70f654e428073121a3fa0dc23caac81a1b1300277d4dba",
         strip_prefix = "libgit2-1.1.0",
-        build_file = "//third_party:libgit2.BUILD",
+        build_file = Label("//third_party:libgit2.BUILD"),
         urls = ["https://github.com/libgit2/libgit2/releases/download/v1.1.0/libgit2-1.1.0.tar.gz"],
     )
 
@@ -1165,6 +1166,35 @@ def _tf_repositories():
         build_file = Label("//third_party:log4cxx.BUILD"),
     )
 
+    http_archive(
+        name = "uuid",
+        urls = [
+            "https://mirrors.edge.kernel.org/pub/linux/utils/util-linux/v2.35/util-linux-{}.tar.gz".format("2.35.1"),
+        ],
+        strip_prefix = "util-linux-" + "2.35.1",
+        build_file = Label("//third_party:uuid.BUILD"),
+    )
+
+    http_archive(
+        name = "eigen",
+        urls = [
+            "https://gitlab.com/libeigen/eigen/-/archive/{tag}/eigen-{tag}.tar.gz".format(tag = "3.4.0"),
+        ],
+        strip_prefix = "eigen-{}".format("3.4.0"),
+        build_file = Label("//third_party:eigen.BUILD"),
+    )
+
+    http_archive(
+        name = "openblas",
+        urls = [
+            "https://github.com/xianyi/OpenBLAS/releases/download/v{tag}/OpenBLAS-{tag}.tar.gz".format(tag = "0.3.19"),
+        ],
+        type = "tar.gz",
+        strip_prefix = "OpenBLAS-{}".format("0.3.19"),
+        sha256 = "947f51bfe50c2a0749304fbe373e00e7637600b0a47b78a51382aeb30ca08562",
+        build_file = Label("//third_party:openblas.BUILD"),
+    )
+
     # ===== ICU dependency =====
     # Note: This overrides the dependency from TensorFlow with a version
     # that contains all data.
@@ -1201,7 +1231,6 @@ def _tf_repositories():
     #     sha256 = "c05901f30a1d0ed64cbcf40eba08e48894e1b0e985777217b7c9036cac631346",
     #     url = "https://github.com/google/sentencepiece/archive/1.0.0.zip",
     # )
-
 
 def workspace():
     # Check the bazel version before executing any repository rules, in case

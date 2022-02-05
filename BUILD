@@ -13,8 +13,6 @@ exports_files([
 
 licenses(["notice"])  # Apache 2.0
 
-package(default_visibility = ["//visibility:public"])
-
 build_test(
     name = "build_test",
     targets = [
@@ -62,6 +60,13 @@ build_test(
         "@zstd//:zstd",
         "@ps-lite//:ps-lite",
         "@rules_compressor//example:zlib_usage_example",
+        "@spdlog",
+        "@com_github_fmtlib_fmt//:fmt",
+        "@uuid",
+        "@libevent",
+        "@cityhash",
+        "@openblas",
+        "@eigen",
     ],
 )
 

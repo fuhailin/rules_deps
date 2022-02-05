@@ -21,7 +21,7 @@ cmake(
     },
     lib_source = ":all_srcs",
     out_lib_dir = select({
-        "@platforms//os:linux": "lib64",
+        "@platforms//os:linux": "lib",
         "//conditions:default": "lib",
     }),
     # linkopts = ["-lpthread"],
