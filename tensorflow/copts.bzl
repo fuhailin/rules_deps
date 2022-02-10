@@ -61,7 +61,7 @@ DEFAULT_LINKOPTS = [
     "-latomic",
     "-lpthread",
     "-ldl",
-    "-fuse-ld=lld",
+    # "-fuse-ld=lld",
 ]
 
 TEST_CPP_COPTS = DEFAULT_CPP_COPTS + [

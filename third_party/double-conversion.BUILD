@@ -1,5 +1,5 @@
 # vim: ft=bzl
-load("@org_tensorflow//third_party/fbthrift:copts.bzl", "DEFAULT_CPP_COPTS")
+load("@org_tensorflow//tensorflow:copts.bzl", "DEFAULT_CPP_COPTS")
 
 licenses(["notice"])
 

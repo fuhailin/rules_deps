@@ -13,7 +13,7 @@
 # limitations under the License.
 
 load("@org_tensorflow//third_party/fbthrift:build_defs.bzl", "fbthrift_library")
-load("@org_tensorflow//third_party/fbthrift:copts.bzl", "DEFAULT_CPP_COPTS", "DEFAULT_LINKOPTS")
+load("@org_tensorflow//tensorflow:copts.bzl", "DEFAULT_CPP_COPTS", "DEFAULT_LINKOPTS")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 load("@rules_flex//flex:flex.bzl", "flex")
 

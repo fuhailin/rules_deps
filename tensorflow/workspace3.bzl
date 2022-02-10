@@ -57,7 +57,7 @@ def workspace():
         ],
     )
 
-    '''
+    # '''
     git_repository(
         name = "rules_compressor",
         branch = "main",

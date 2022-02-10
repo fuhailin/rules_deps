@@ -1067,12 +1067,12 @@ def _tf_repositories():
     )
 
     http_archive(
-        name = "apache_thrift",
+        name = "com_github_apache_thrift",
         urls = [
             "https://github.com/apache/thrift/archive/refs/tags/v{}.zip".format("0.15.0"),
         ],
         strip_prefix = "thrift-0.15.0",
-        build_file = Label("//third_party:thrift.BUILD"),
+        build_file = Label("//third_party/thrift:thrift.BUILD"),
     )
 
     FBTHRIFT_VERSION = "2022.01.24.00"
