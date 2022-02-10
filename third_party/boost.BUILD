@@ -1,53 +1,87 @@
 load("@rules_foreign_cc//foreign_cc:defs.bzl", "boost_build")
 
+package(default_visibility = ["//visibility:public"])
+
 filegroup(
     name = "all_srcs",
     srcs = glob(["**"]),
 )
 
+LIBS = [
+    # keep sorted
+    "atomic",
+    "chrono",
+    "container",
+    "context",
+    "contract",
+    "coroutine",
+    "date_time",
+    "exception",
+    "fiber",
+    "filesystem",
+    "graph",
+    "iostreams",
+    "json",
+    "locale",
+    "log",
+    "log_setup",
+    "math_c99",
+    "math_c99f",
+    "math_c99l",
+    "math_tr1",
+    "math_tr1f",
+    "math_tr1l",
+    "nowide",
+    "prg_exec_monitor",
+    "program_options",
+    "random",
+    "regex",
+    "serialization",
+    "stacktrace_addr2line",
+    "stacktrace_backtrace",
+    "stacktrace_basic",
+    "stacktrace_noop",
+    "system",
+    "test_exec_monitor",
+    "thread",
+    "timer",
+    "type_erasure",
+    "unit_test_framework",
+    "wave",
+    "wserialization",
+]
+
 boost_build(
     name = "boost",
-    bootstrap_options = [
-        "--without-icu",
-    ],
+    # bootstrap_options = [
+    #     "--without-icu",
+    # ],
     lib_source = ":all_srcs",
-    out_shared_libs = select({
-        "@platforms//os:macos": [
-            "libboost_filesystem.dylib",
-            "libboost_program_options.dylib",
-            "libboost_regex.dylib",
-            "libboost_system.dylib",
-            "libboost_thread.dylib",
-            "libboost_context.dylib",
-        ],
-        "@platforms//os:linux": [
-            "libboost_filesystem.so.1.76.0",
-            "libboost_program_options.so.1.76.0",
-            "libboost_regex.so.1.76.0",
-            "libboost_system.so.1.76.0",
-            "libboost_thread.so.1.76.0",
-            "libboost_context.so.1.76.0",
-        ],
-        "@platforms//os:windows": [
-            "libboost_filesystem.dll.1.76.0",
-            "libboost_program_options.dll.1.76.0",
-            "libboost_regex.dll.1.76.0",
-            "libboost_system.dll.1.76.0",
-            "libboost_thread.dll.1.76.0",
-            "libboost_context.dll.1.76.0",
-        ],
-    }),
+    out_static_libs = ["libboost_{}.a".format(lib) for lib in LIBS],
     user_options = [
         "-j`nproc`",
-        # "--with-filesystem",
-        # "--with-program_options",
-        # "--with-regex",
-        # "--with-system",
-        # "--with-thread",
-        # "--with-context",
+        "link=static",
+        "runtime-link=static",
         # "variant=release",
-        # "link=shared",
         # "threading=multi",
     ],
     visibility = ["//visibility:public"],
+)
+
+boost_build(
+    name = "iostreams",
+    lib_source = ":all_srcs",
+    out_static_libs = ["libboost_iostreams.a"],
+    user_options = [
+        "-j`nproc`",
+        "--with-iostreams",
+    ],
+    deps = [
+        "@com_github_facebook_zstd//:zstd",
+        "@lz4",
+        "@org_bzip_bzip2//:bzip2",
+        "@org_lzma_lzma//:lzma",
+        "@snappy",
+        "@zlib",
+    ],
 )

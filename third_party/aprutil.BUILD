@@ -13,7 +13,7 @@ configure_make(
     args = [
         "-j `nproc`",
     ],
-    # configure_env_vars = {
+    # env = {
     #     "AR": "",
     # },
     configure_options = [

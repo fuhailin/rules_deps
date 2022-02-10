@@ -1,6 +1,8 @@
 """TensorFlow workspace initialization. Consult the WORKSPACE on how to use it."""
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 
 # Import third party config rules.
 load("//tensorflow:version_check.bzl", "check_bazel_version_at_least")
@@ -47,8 +49,6 @@ load("//third_party/vulkan_headers:workspace.bzl", vulkan_headers = "repo")
 load("//third_party/tensorrt:workspace.bzl", tensorrt = "repo")
 
 # Import external repository rules.
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
-load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@io_bazel_rules_closure//closure:defs.bzl", "filegroup_external")
 load("@tf_runtime//:dependencies.bzl", "tfrt_dependencies")
 load("@tf_toolchains//toolchains/remote_config:configs.bzl", "initialize_rbe_configs")
@@ -569,15 +569,6 @@ def _tf_repositories():
         urls = tf_mirror_urls("https://github.com/google/boringssl/archive/80ca9f9f6ece29ab132cce4cf807a9465a18cfac.tar.gz"),
     )
 
-    tf_http_archive(
-        name = "zlib",
-        build_file = "//third_party:zlib.BUILD",
-        sha256 = "c3e5e9fdd5004dcb542feda5ee4f0ff0744628baf8ed2dd5d66f8ca1197cb1a1",
-        strip_prefix = "zlib-1.2.11",
-        system_build_file = "//third_party/systemlibs:zlib.BUILD",
-        urls = tf_mirror_urls("https://zlib.net/zlib-1.2.11.tar.gz"),
-    )
-
     # LINT.IfChange
     tf_http_archive(
         name = "fft2d",
@@ -587,15 +578,6 @@ def _tf_repositories():
         urls = tf_mirror_urls("https://github.com/petewarden/OouraFFT/archive/v1.0.tar.gz"),
     )
     # LINT.ThenChange(//tensorflow/lite/tools/cmake/modules/fft2d.cmake)
-
-    tf_http_archive(
-        name = "snappy",
-        build_file = "//third_party:snappy.BUILD",
-        sha256 = "16b677f07832a612b0836178db7f374e414f94657c138e6993cbfc5dcc58651f",
-        strip_prefix = "snappy-1.1.8",
-        system_build_file = "//third_party/systemlibs:snappy.BUILD",
-        urls = tf_mirror_urls("https://github.com/google/snappy/archive/1.1.8.tar.gz"),
-    )
 
     tf_http_archive(
         name = "nccl_archive",
@@ -712,12 +694,12 @@ def _tf_repositories():
     )
     # LINT.ThenChange(//tensorflow/lite/tools/cmake/modules/neon2sse.cmake)
 
-    tf_http_archive(
-        name = "double_conversion",
-        sha256 = "a0204d6ab48223f2c8f53a932014e7f245125e7a5267764b1fbeebe4fa0ee8b9",
-        strip_prefix = "double-conversion-3.1.7",
-        system_build_file = "//third_party/systemlibs:double_conversion.BUILD",
-        urls = tf_mirror_urls("https://github.com/google/double-conversion/archive/refs/tags/v3.1.7.tar.gz"),
+    http_archive(
+        name = "com_github_google_double_conversion",
+        urls = ["https://github.com/google/double-conversion/archive/v3.1.5.tar.gz"],
+        build_file = Label("//third_party:double-conversion.BUILD"),
+        sha256 = "a63ecb93182134ba4293fd5f22d6e08ca417caafa244afaa751cbfddf6415b13",
+        strip_prefix = "double-conversion-3.1.5",
     )
 
     tf_http_archive(
@@ -884,6 +866,17 @@ def _tf_repositories():
         build_file = "//third_party:boost.BUILD",
         urls = tf_mirror_urls("https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz"),
     )
+    '''
+    _RULES_BOOST_COMMIT = "652b21e35e4eeed5579e696da0facbe8dba52b1f"
+    http_archive(
+        name = "com_github_nelhage_rules_boost",
+        sha256 = "c1b8b2adc3b4201683cf94dda7eef3fc0f4f4c0ea5caa3ed3feffe07e1fb5b15",
+        strip_prefix = "rules_boost-%s" % _RULES_BOOST_COMMIT,
+        urls = [
+            "https://github.com/nelhage/rules_boost/archive/%s.tar.gz" % _RULES_BOOST_COMMIT,
+        ],
+    )
+    '''
 
     tf_http_archive(
         name = "jemalloc",
@@ -893,12 +886,15 @@ def _tf_repositories():
         urls = tf_mirror_urls("https://github.com/jemalloc/jemalloc/archive/5.2.1.tar.gz"),
     )
 
-    tf_http_archive(
+    FOLLY_VERSION = "2022.01.24.00"
+    http_archive(
         name = "com_github_facebook_folly",
-        sha256 = "73c8b65d0f137caf7b2ac328dc0b2c9a9b3d0e29c1c89f0346a846f6467cbeb5",
-        strip_prefix = "folly-2021.08.30.00",
-        build_file = "//third_party:folly.BUILD",
-        urls = tf_mirror_urls("https://github.com/facebook/folly/archive/refs/tags/v2021.08.30.00.tar.gz"),
+        build_file = Label("//third_party/folly:folly.BUILD"),
+        urls = [
+            "https://github.com/facebook/folly/archive/refs/tags/v{tag}.tar.gz".format(tag = FOLLY_VERSION),
+        ],
+        # sha256 = "369d17a6603c1dc53db006bd5d613461b76db089bd90a85a713565c263497082",
+        strip_prefix = "folly-" + FOLLY_VERSION,
     )
 
     http_archive(
@@ -907,13 +903,6 @@ def _tf_repositories():
         sha256 = "b06ca3130158c625848f3fb7418f235155a4d389b2abc3a6245fb01cb0eb1e01",
         build_file = Label("//third_party:fmt.BUILD"),
         urls = ["https://github.com/fmtlib/fmt/archive/refs/tags/8.0.1.tar.gz"],
-    )
-
-    http_archive(
-        name = "com_github_google_double_conversion",
-        sha256 = "a63ecb93182134ba4293fd5f22d6e08ca417caafa244afaa751cbfddf6415b13",
-        strip_prefix = "double-conversion-3.1.5",
-        urls = ["https://github.com/google/double-conversion/archive/v3.1.5.tar.gz"],
     )
 
     http_archive(
@@ -932,6 +921,14 @@ def _tf_repositories():
         strip_prefix = "libgit2-1.1.0",
         build_file = Label("//third_party:libgit2.BUILD"),
         urls = ["https://github.com/libgit2/libgit2/releases/download/v1.1.0/libgit2-1.1.0.tar.gz"],
+    )
+
+    http_archive(
+        name = "com_github_jedisct1_libsodium",
+        # sha256 = "ad73f845965cfd528e70f654e428073121a3fa0dc23caac81a1b1300277d4dba",
+        strip_prefix = "libsodium-stable",
+        build_file = Label("//third_party:libsodium.BUILD"),
+        urls = ["https://download.libsodium.org/libsodium/releases/libsodium-1.0.18-stable.tar.gz"],
     )
 
     # http_archive(
@@ -1039,6 +1036,7 @@ def _tf_repositories():
             "https://github.com/jupp0r/prometheus-cpp/archive/v1.0.0.zip",
         ],
         strip_prefix = "prometheus-cpp-1.0.0",
+        sha256 = "0a07b8dfc388d5da81fc02e356e6c78a896544c96cc40e8cca41e180a814e16c",
     )
 
     http_archive(
@@ -1077,6 +1075,15 @@ def _tf_repositories():
         build_file = Label("//third_party:thrift.BUILD"),
     )
 
+    FBTHRIFT_VERSION = "2022.01.24.00"
+    http_archive(
+        name = "com_github_facebook_fbthrift",
+        build_file = Label("//third_party/fbthrift:fbthrift.BUILD"),
+        # sha256 = "0fc6cc1673209f4557e081597b2311f6c9f153840c4e55ac61a669e10207e2ee",
+        strip_prefix = "fbthrift-" + FBTHRIFT_VERSION,
+        url = "https://github.com/facebook/fbthrift/archive/v{}.tar.gz".format(FBTHRIFT_VERSION),
+    )
+
     http_archive(
         name = "rapidjson",
         urls = [
@@ -1084,6 +1091,7 @@ def _tf_repositories():
         ],
         strip_prefix = "rapidjson-" + "00dbcf2c6e03c47d6c399338b6de060c71356464",
         build_file = Label("//third_party:rapidjson.BUILD"),
+        sha256 = "b4339b8118d57f70de7a17ed8f07997080f98940ca538f43e1ca4b95a835221d",
     )
 
     http_archive(
@@ -1093,6 +1101,22 @@ def _tf_repositories():
         ],
         strip_prefix = "libevent-2.1.12-stable",
         build_file = Label("//third_party:libevent.BUILD"),
+    )
+
+    http_archive(
+        name = "rsocket-cpp",
+        build_file = Label("//third_party:rsocket-cpp.BUILD"),
+        urls = ["https://github.com/rsocket/rsocket-cpp/archive/e377f18abb03a885196385fada0329b50379c8ae.zip"],
+        sha256 = "06e4aae7a6eeafdc1ec17f2c73941e799dedb482e870acc0576d05c74138dcbf",
+        strip_prefix = "rsocket-cpp-e377f18abb03a885196385fada0329b50379c8ae",
+    )
+
+    http_archive(
+        name = "flex",
+        build_file = Label("//third_party/flex:flex.BUILD"),
+        urls = ["https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz"],
+        sha256 = "e87aae032bf07c26f85ac0ed3250998c37621d95f8bd748b31f15b33c45ee995",
+        strip_prefix = "flex-2.6.4",
     )
 
     # http_archive(
@@ -1193,6 +1217,219 @@ def _tf_repositories():
         strip_prefix = "OpenBLAS-{}".format("0.3.19"),
         sha256 = "947f51bfe50c2a0749304fbe373e00e7637600b0a47b78a51382aeb30ca08562",
         build_file = Label("//third_party:openblas.BUILD"),
+    )
+
+    http_archive(
+        name = "com_github_google_flatbuffers",
+        urls = [
+            "https://github.com/google/flatbuffers/archive/v{}.tar.gz".format("1.12.0"),
+        ],
+        strip_prefix = "flatbuffers-" + "1.12.0",
+    )
+
+    http_archive(
+        name = "jemalloc",
+        urls = [
+            "https://github.com/jemalloc/jemalloc/archive/{}.tar.gz".format("5.2.1"),
+        ],
+        strip_prefix = "jemalloc-" + "5.2.1",
+        build_file = Label("//third_party:jemalloc.BUILD"),
+    )
+
+    http_archive(
+        name = "apache_arrow",
+        urls = [
+            "https://github.com/apache/arrow/archive/refs/tags/apache-arrow-{}.tar.gz".format("5.0.0"),
+        ],
+        strip_prefix = "arrow-apache-arrow-{}".format("5.0.0"),
+        build_file = Label("//third_party:arrow.BUILD"),
+    )
+
+    http_archive(
+        name = "xsimd",
+        urls = [
+            "https://github.com/xtensor-stack/xsimd/archive/refs/tags/{}.tar.gz".format("7.5.0"),
+        ],
+        strip_prefix = "xsimd-" + "7.5.0",
+        build_file = Label("//third_party:xsimd.BUILD"),
+    )
+
+    http_archive(
+        name = "com_github_opencv",
+        strip_prefix = "opencv-{}".format("4.5.3"),
+        urls = [
+            "https://github.com/opencv/opencv/archive/refs/tags/{}.tar.gz".format("4.5.3"),
+        ],
+        build_file = Label("//third_party:opencv.BUILD"),
+    )
+
+    http_archive(
+        name = "org_gnu_bison",
+        urls = [
+            "https://ftp.gnu.org/gnu/bison/bison-3.5.tar.gz",
+            "https://mirror.bazel.build/ftp.gnu.org/gnu/bison/bison-3.5.tar.gz",
+        ],
+        strip_prefix = "bison-3.5",
+        build_file = Label("//third_party:bison.BUILD"),
+    )
+
+    http_archive(
+        name = "org_gnu_m4",
+        urls = [
+            "https://ftp.gnu.org/gnu/m4/m4-1.4.18.tar.gz",
+        ],
+        strip_prefix = "m4-1.4.18",
+        build_file = Label("//third_party/m4:m4.BUILD"),
+        patch_args = ["-p1"],
+        patches = ["//third_party/m4:m4.patch"],
+    )
+
+    http_archive(
+        name = "com_github_axboe_liburing",
+        build_file = Label("//third_party/liburing:liburing.BUILD"),
+        urls = [
+            "https://github.com/axboe/liburing/archive/liburing-0.6.tar.gz",
+        ],
+        strip_prefix = "liburing-liburing-0.6",
+        patch_args = [
+            "-p0",
+        ],
+        patches = [
+            Label("//third_party/liburing:liburing.patch"),
+        ],
+    )
+
+    # http_archive(
+    #     name = "rules_m4",
+    #     urls = ["https://github.com/jmillikin/rules_m4/releases/download/v0.2/rules_m4-v0.2.tar.xz"],
+    #     sha256 = "c67fa9891bb19e9e6c1050003ba648d35383b8cb3c9572f397ad24040fb7f0eb",
+    # )
+
+    git_repository(
+        name = "rules_m4",
+        branch = "trunk",
+        remote = "https://github.com/jmillikin/rules_m4",
+    )
+
+    http_archive(
+        name = "rules_flex",
+        urls = ["https://github.com/jmillikin/rules_flex/releases/download/v0.2/rules_flex-v0.2.tar.xz"],
+        sha256 = "f1685512937c2e33a7ebc4d5c6cf38ed282c2ce3b7a9c7c0b542db7e5db59d52",
+        patch_cmds = ["sed -i '76d' flex/flex.bzl"],
+    )
+
+    http_archive(
+        name = "com_pagure_libaio",
+        build_file = Label("//third_party:libaio.BUILD"),
+        urls = ["https://pagure.io/libaio/archive/libaio-0.3.111/libaio-libaio-0.3.111.tar.gz"],
+        sha256 = "e6bc17cba66e59085e670fea238ad095766b412561f90b354eb4012d851730ba",
+        strip_prefix = "libaio-libaio-0.3.111",
+        patches = [
+            Label("//third_party:libaio.patch"),
+        ],
+        patch_args = [
+            "-p1",
+        ],
+    )
+
+    http_archive(
+        name = "libdwarf",
+        build_file = Label("//third_party:libdwarf.BUILD"),
+        urls = [
+            "https://www.prevanders.net/libdwarf-0.3.1.tar.xz",
+        ],
+        # sha256 = "86119a9f7c409dc31e02d12c1b3906b1fce0dcb4db3d7e65ebe1bae585cf08f8",
+        strip_prefix = "libdwarf-0.3.1",
+    )
+
+    http_archive(
+        name = "libunwind",
+        build_file = Label("//third_party:libunwind.BUILD"),
+        urls = ["https://github.com/libunwind/libunwind/releases/download/v1.5/libunwind-1.5.0.tar.gz"],
+        sha256 = "90337653d92d4a13de590781371c604f9031cdb50520366aa1e3a91e1efb1017",
+        strip_prefix = "libunwind-1.5.0",
+    )
+
+    http_archive(
+        name = "libiberty",
+        urls = [
+            "https://ftpmirror.gnu.org/gcc/gcc-11.2.0/gcc-11.2.0.tar.xz",
+            "https://ftp.gnu.org/gnu/gcc/gcc-11.2.0/gcc-11.2.0.tar.gz",
+            "http://mirrors.concertpass.com/gcc/releases/gcc-11.2.0/gcc-11.2.0.tar.gz",
+        ],
+        strip_prefix = "gcc-11.2.0",
+        build_file = Label("//third_party:libiberty.BUILD"),
+        # sha256 = "0a07b8dfc388d5da81fc02e356e6c78a896544c96cc40e8cca41e180a814e16c",
+    )
+
+    http_archive(
+        name = "rules_bison",
+        urls = ["https://github.com/jmillikin/rules_bison/releases/download/v0.2/rules_bison-v0.2.tar.xz"],
+        sha256 = "6ee9b396f450ca9753c3283944f9a6015b61227f8386893fb59d593455141481",
+    )
+
+    PROXYGEN_VERSION = "2022.01.31.00"
+    http_archive(
+        name = "com_github_facebook_proxygen",
+        build_file = Label("//third_party:proxygen.BUILD"),
+        urls = [
+            "https://github.com/facebook/proxygen/archive/v{tag}.tar.gz".format(tag = PROXYGEN_VERSION),
+        ],
+        # sha256 = "c8ac12aed526c3e67b9424a358dac150958e727feb2b3d1b8b3407ea0d53e315",
+        strip_prefix = "proxygen-" + PROXYGEN_VERSION,
+    )
+
+    WANGLE_VERSION = "2022.01.31.00"
+    http_archive(
+        name = "com_github_facebook_wangle",
+        build_file = Label("//third_party:wangle.BUILD"),
+        urls = [
+            "https://github.com/facebook/wangle/archive/v{tag}.tar.gz".format(tag = WANGLE_VERSION),
+        ],
+        strip_prefix = "wangle-" + WANGLE_VERSION,
+        # sha256 = "a046dfea92f453bd12b28dad287a7eb86e782c4db9518b90c33c5320b3868f0b",
+    )
+
+    FIZZ_VERSION = "2022.01.31.00"
+    http_archive(
+        name = "com_github_facebookincubator_fizz",
+        build_file = Label("//third_party:fizz.BUILD"),
+        strip_prefix = "fizz-" + FIZZ_VERSION,
+        urls = [
+            "https://github.com/facebookincubator/fizz/archive/v{tag}.tar.gz".format(tag = FIZZ_VERSION),
+        ],
+        # sha256 = "62d3f5ff24c32e373771ee33a7c4f394b56536d941ac476f774f62b6189d6ce5",
+    )
+
+    http_archive(
+        name = "com_github_facebook_fatal",
+        build_file = Label("//third_party:fatal.BUILD"),
+        strip_prefix = "fatal-2022.02.07.00",
+        urls = ["https://github.com/facebook/fatal/archive/refs/tags/v2022.02.07.00.tar.gz"],
+        # sha256 = "62d3f5ff24c32e373771ee33a7c4f394b56536d941ac476f774f62b6189d6ce5",
+    )
+
+    http_archive(
+        name = "com_github_cyan4973_xxhash",
+        build_file = Label("//third_party:xxhash.BUILD"),
+        strip_prefix = "xxHash-0.8.1",
+        urls = ["https://github.com/Cyan4973/xxHash/archive/refs/tags/v0.8.1.tar.gz"],
+        # sha256 = "62d3f5ff24c32e373771ee33a7c4f394b56536d941ac476f774f62b6189d6ce5",
+    )
+
+    http_archive(
+        name = "com_github_catchorg_Catch2",
+        urls = [
+            "https://github.com/catchorg/Catch2/archive/refs/tags/v2.13.8.tar.gz",
+        ],
+        strip_prefix = "Catch2-2.13.8",
+        # sha256 = "0a07b8dfc388d5da81fc02e356e6c78a896544c96cc40e8cca41e180a814e16c",
+    )
+
+    git_repository(
+        name = "com_github_google_brotli",
+        remote = "https://github.com/google/brotli",
+        tag = "v1.0.9",
     )
 
     # ===== ICU dependency =====

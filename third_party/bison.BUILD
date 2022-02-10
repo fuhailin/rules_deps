@@ -13,10 +13,22 @@ configure_make(
     args = [
         "-j `nproc`",
     ],
+    env = {
+        "AR": "",
+    },
     lib_source = ":all_srcs",
     out_binaries = [
         "bison",
         "yacc",
     ],
     out_static_libs = ["liby.a"],
+)
+
+genrule(
+    name = "yacc_bin",
+    srcs = [":bison"],
+    outs = ["yacc"],
+    cmd = "cp `ls $(locations :bison) | grep /bin/bison$$` $@",
+    executable = True,
+    visibility = ["//visibility:public"],
 )

@@ -57,16 +57,25 @@ def workspace():
         ],
     )
 
+    '''
     git_repository(
         name = "rules_compressor",
         branch = "main",
         remote = "https://github.com/fuhailin/rules_compressor.git",
     )
+    '''
+    native.local_repository(
+        name = "rules_compressor",
+        path = "/root/projects/rules_compressor",
+    )
 
-    # native.local_repository(
-    #     name = "ps-lite",
-    #     path = "/root/fuhailin/projects/ps-lite",
-    # )
+    # '''
+    '''
+    native.local_repository(
+        name = "ps-lite",
+        path = "/root/fuhailin/projects/ps-lite",
+    )
+    '''
     git_repository(
         name = "ps-lite",
         branch = "master",

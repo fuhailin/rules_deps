@@ -9,17 +9,13 @@ filegroup(
 
 # I tested and this builds only for me on Linux
 configure_make(
-    name = "apr",
+    name = "sodium",
     args = [
         "-j `nproc`",
     ],
-    # env = {
-    #     "AR": "",
-    # },
-    configure_options = [
-        "--enable-shared=no",
-        "--with-pic",
-    ],
+    env = {
+        "AR": "",
+    },
     lib_source = ":all_srcs",
-    out_static_libs = ["libapr-1.a"],
+    out_static_libs = ["libsodium.a"],
 )

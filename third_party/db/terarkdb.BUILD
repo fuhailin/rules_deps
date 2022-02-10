@@ -31,12 +31,12 @@ cmake(
     postfix_script = "mv $BUILD_TMPDIR/lib/libterarkdb.a $INSTALLDIR/lib/",
     deps = [
         "@com_github_gflags_gflags//:gflags",
-        "@bzip2",
+        "@org_bzip_bzip2//:bzip2",
         "@jemalloc",
         # "@com_google_googletest//:gtest",
         "@lz4",
         "@snappy",
         "@zlib",
-        "@zstd",
+        "@com_github_facebook_zstd//:zstd",
     ],
 )

@@ -25,7 +25,7 @@ cmake(
         # "@apache_thrift//:thrift",
         # "@boringssl//:crypto",
         # "@brotli",
-        # "@bzip2",
+        # "@org_bzip_bzip2//:bzip2",
         # "@com_github_google_double_conversion//:double-conversion",
         "@jemalloc",
         # "@lz4",
@@ -33,6 +33,6 @@ cmake(
         # "@snappy",
         "@xsimd",
         # "@zlib",
-        # "@zstd",
+        # "@com_github_facebook_zstd//:zstd",
     ],
 )

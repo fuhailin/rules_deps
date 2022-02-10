@@ -4,22 +4,26 @@ package(default_visibility = ["//visibility:public"])
 
 filegroup(
     name = "all_srcs",
-    srcs = glob(["**"]),
+    srcs = glob(
+        ["**"],
+        exclude = ["gcc/**"],
+    ),
 )
 
 # I tested and this builds only for me on Linux
 configure_make(
-    name = "apr",
+    name = "libdwarf",
     args = [
         "-j `nproc`",
     ],
     # env = {
     #     "AR": "",
     # },
-    configure_options = [
-        "--enable-shared=no",
-        "--with-pic",
-    ],
+    configure_command = "./configure",
+    # configure_options = [
+    #     "--enable-install-libiberty",
+    # ],
+    includes = ["libdwarf-0"],
     lib_source = ":all_srcs",
-    out_static_libs = ["libapr-1.a"],
+    out_static_libs = ["libdwarf.a"],
 )
