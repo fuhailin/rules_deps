@@ -74,7 +74,6 @@ cc_binary(
     copts = DEFAULT_CPP_COPTS,
     includes = ["compiler/cpp/src"],
     linkopts = DEFAULT_LINKOPTS + ["-static"],
-    visibility = ["//visibility:public"],
 )
 
 # cc_library(

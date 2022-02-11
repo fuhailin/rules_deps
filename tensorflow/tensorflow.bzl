@@ -3169,7 +3169,7 @@ def tf_python_pybind_static_deps():
         "@pthreadpool//:__subpackages__",
         "@pybind11//:__subpackages__",
         "@ruy//:__subpackages__",
-        "@snappy//:__subpackages__",
+        "@com_github_google_snappy//:snappy//:__subpackages__",
         "@sobol_data//:__subpackages__",
         "@upb//:__subpackages__",
         "@zlib//:__subpackages__",

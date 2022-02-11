@@ -30,7 +30,7 @@ cmake(
         "@jemalloc",
         # "@lz4",
         # "@rapidjson",
-        # "@snappy",
+        # "@com_github_google_snappy//:snappy",
         "@xsimd",
         # "@zlib",
         # "@com_github_facebook_zstd//:zstd",

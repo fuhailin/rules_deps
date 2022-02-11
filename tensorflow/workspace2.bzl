@@ -1417,13 +1417,14 @@ def _tf_repositories():
         # sha256 = "62d3f5ff24c32e373771ee33a7c4f394b56536d941ac476f774f62b6189d6ce5",
     )
 
-    http_archive(
+    new_git_repository(
         name = "com_github_catchorg_Catch2",
-        urls = [
-            "https://github.com/catchorg/Catch2/archive/refs/tags/v2.13.8.tar.gz",
+        remote = "https://github.com/catchorg/Catch2",
+        build_file = Label("//third_party:catch2.BUILD"),
+        patch_cmds = [
+            "mv src/catch2/catch_all.hpp src/catch2/catch.hpp",
         ],
-        strip_prefix = "Catch2-2.13.8",
-        # sha256 = "0a07b8dfc388d5da81fc02e356e6c78a896544c96cc40e8cca41e180a814e16c",
+        branch = "devel",
     )
 
     git_repository(
@@ -1468,6 +1469,13 @@ def _tf_repositories():
     #     sha256 = "c05901f30a1d0ed64cbcf40eba08e48894e1b0e985777217b7c9036cac631346",
     #     url = "https://github.com/google/sentencepiece/archive/1.0.0.zip",
     # )
+
+    new_git_repository(
+        name = "msgpack",
+        remote = "https://github.com/msgpack/msgpack-c",
+        branch = "cpp_master",
+        build_file = Label("//third_party:msgpack.BUILD"),
+    )
 
 def workspace():
     # Check the bazel version before executing any repository rules, in case

@@ -16,6 +16,12 @@ load("@org_tensorflow//third_party/fbthrift:build_defs.bzl", "fbthrift_library")
 load("@org_tensorflow//tensorflow:copts.bzl", "DEFAULT_CPP_COPTS", "DEFAULT_LINKOPTS")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 load("@rules_flex//flex:flex.bzl", "flex")
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+filegroup(
+    name = "all_srcs",
+    srcs = glob(["**"]),
+)
 
 cc_binary(
     name = "compiler_generate_build_templates",
@@ -156,7 +162,7 @@ cc_library(
     includes = ["."],
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_catchorg_Catch2//:catch2",
+        # "@com_github_catchorg_Catch2//:catch2",
         "@com_github_cyan4973_xxhash//:xxhash",
         "@com_github_facebook_fatal//:fatal",
         "@com_github_facebook_folly//:folly",
@@ -165,3 +171,22 @@ cc_library(
         "@net_zlib_zlib//:zlib",
     ],
 )
+
+# cmake(
+#     name = "fbthrift",
+#     build_args = [
+#         "-j `nproc`",
+#     ],
+#     # cache_entries = {
+#     #     # Workaround for the issue with statically linked libstdc++
+#     #     # using -l:libstdc++.a.
+#     #     "CMAKE_CXX_FLAGS": "-lstdc++",
+#     #     "ARROW_CXX_COMPILER_FLAGS": "-lstdc++",
+#     # },
+#     lib_source = ":all_srcs",
+#     # out_static_libs = ["libarrow.a"],
+#     # working_directory = "cpp",
+#     deps = [
+#         "@com_github_facebook_folly//:folly",
+#     ],
+# )

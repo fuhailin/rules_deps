@@ -78,10 +78,10 @@ boost_build(
     ],
     deps = [
         "@com_github_facebook_zstd//:zstd",
+        "@com_github_google_snappy//:snappy",
         "@lz4",
         "@org_bzip_bzip2//:bzip2",
         "@org_lzma_lzma//:lzma",
-        "@snappy",
         "@zlib",
     ],
 )

@@ -28,6 +28,6 @@ cmake(
     out_static_libs = ["libleveldb.a"],
     # deps = [
     #     "@com_google_googletest//:gtest",
-    #     "@snappy",
+    #     "@com_github_google_snappy//:snappy",
     # ],
 )

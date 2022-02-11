@@ -1478,7 +1478,7 @@ cc_library(
         "//tensorflow/core/platform/default/build_config:platformlib",
         "//tensorflow/core/util:env_var",
         "//tensorflow/core/util:reporter",  # TODO(gunan): REMOVE as soon as cc_shared_library is supported.
-        "@snappy",
+        "@com_github_google_snappy//:snappy",
         "@zlib",
         "@double_conversion//:double-conversion",
         "@com_google_protobuf//:protobuf",

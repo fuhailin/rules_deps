@@ -313,7 +313,7 @@ cc_library(
         "//tensorflow/core/platform:profile_utils_cpu_utils",
         "//tensorflow/core/platform:types",
         "//tensorflow/core/platform",
-        "@snappy",
+        "@com_github_google_snappy//:snappy",
     ] + select({
         # TF Additional NUMA dependencies
         "//tensorflow:with_numa_support": [

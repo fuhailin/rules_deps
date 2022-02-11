@@ -35,7 +35,7 @@ cmake(
         "@jemalloc",
         # "@com_google_googletest//:gtest",
         "@lz4",
-        "@snappy",
+        "@com_github_google_snappy//:snappy",
         "@zlib",
         "@com_github_facebook_zstd//:zstd",
     ],

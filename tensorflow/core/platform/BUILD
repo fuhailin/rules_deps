@@ -224,7 +224,7 @@ tf_native_cc_shared_library(
         "@hwloc//:__subpackages__",
         "@local_config_cuda//:__subpackages__",
         "@nsync//:__subpackages__",
-        "@snappy//:__subpackages__",
+        "@com_github_google_snappy//:snappy//:__subpackages__",
         "//:__subpackages__",
         # copybara:comment_end
     ],
