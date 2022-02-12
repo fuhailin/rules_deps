@@ -20,36 +20,39 @@ LIBS = [
     "fiber",
     "filesystem",
     "graph",
+    # "graph_parallel",
+    # "headers",
     "iostreams",
     "json",
     "locale",
     "log",
-    "log_setup",
-    "math_c99",
-    "math_c99f",
-    "math_c99l",
-    "math_tr1",
-    "math_tr1f",
-    "math_tr1l",
+    # "math",
+    # "mpi",
     "nowide",
-    "prg_exec_monitor",
     "program_options",
+    # "python",
     "random",
     "regex",
     "serialization",
-    "stacktrace_addr2line",
-    "stacktrace_backtrace",
-    "stacktrace_basic",
-    "stacktrace_noop",
+    # "stacktrace",
     "system",
-    "test_exec_monitor",
+    # "test",
     "thread",
     "timer",
     "type_erasure",
-    "unit_test_framework",
     "wave",
-    "wserialization",
 ]
+
+# boost_build(
+#     name = "headers",
+#     headers_only = True,
+#     lib_source = ":all",
+#     user_options = [
+#         "-j`nproc`",
+#         "--with-headers",
+#     ],
+#     visibility = ["//visibility:public"],
+# )
 
 boost_build(
     name = "boost",
@@ -68,20 +71,23 @@ boost_build(
     visibility = ["//visibility:public"],
 )
 
-boost_build(
-    name = "iostreams",
-    lib_source = ":all_srcs",
-    out_static_libs = ["libboost_iostreams.a"],
-    user_options = [
-        "-j`nproc`",
-        "--with-iostreams",
-    ],
-    deps = [
-        "@com_github_facebook_zstd//:zstd",
-        "@com_github_google_snappy//:snappy",
-        "@lz4",
-        "@org_bzip_bzip2//:bzip2",
-        "@org_lzma_lzma//:lzma",
-        "@zlib",
-    ],
-)
+[
+    boost_build(
+        name = LIB,
+        lib_source = ":all_srcs",
+        out_static_libs = ["libboost_{}.a".format(LIB)],
+        user_options = [
+            "-j`nproc`",
+            "--with-{}".format(LIB),
+        ],
+        deps = [
+            "@com_github_facebook_zstd//:zstd",
+            "@com_github_google_snappy//:snappy",
+            "@lz4",
+            "@org_bzip_bzip2//:bzip2",
+            "@org_lzma_lzma//:lzma",
+            "@zlib",
+        ],
+    )
+    for LIB in LIBS
+]

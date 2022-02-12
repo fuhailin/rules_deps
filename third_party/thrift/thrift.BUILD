@@ -91,9 +91,9 @@ cc_binary(
 #     hdrs = glob(["lib/cpp/src/thrift/**/*.h"]),
 #     copts = DEFAULT_CPP_COPTS,
 #     includes = ["lib/cpp/src"],
-#     visibility = ["//visibility:public"],
 #     deps = [
 #         "@boost",
+#         "@com_github_catchorg_Catch2//:catch2",
 #         "@libevent",
 #         "@org_tensorflow//third_party/thrift/extra:config",
 #         "@zlib",

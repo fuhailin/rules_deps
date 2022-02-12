@@ -17,6 +17,8 @@ load("@org_tensorflow//tensorflow:copts.bzl", "DEFAULT_CPP_COPTS", "DEFAULT_LINK
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 load("@rules_flex//flex:flex.bzl", "flex")
 
+package(default_visibility = ["//visibility:public"])
+
 cc_binary(
     name = "compiler_generate_build_templates",
     srcs = ["thrift/compiler/generate/build_templates.cc"],
@@ -98,7 +100,6 @@ cc_binary(
     ],
     includes = ["."],
     linkopts = DEFAULT_LINKOPTS,  #+ ["-static"],
-    visibility = ["//visibility:public"],
     deps = ["@com_github_facebook_folly//:folly"],
 )
 
@@ -154,7 +155,6 @@ cc_library(
     ]),
     copts = DEFAULT_CPP_COPTS,
     includes = ["."],
-    visibility = ["//visibility:public"],
     deps = [
         "@com_github_catchorg_Catch2//:catch2",
         "@com_github_cyan4973_xxhash//:xxhash",

@@ -866,17 +866,6 @@ def _tf_repositories():
         build_file = "//third_party:boost.BUILD",
         urls = tf_mirror_urls("https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz"),
     )
-    '''
-    _RULES_BOOST_COMMIT = "652b21e35e4eeed5579e696da0facbe8dba52b1f"
-    http_archive(
-        name = "com_github_nelhage_rules_boost",
-        sha256 = "c1b8b2adc3b4201683cf94dda7eef3fc0f4f4c0ea5caa3ed3feffe07e1fb5b15",
-        strip_prefix = "rules_boost-%s" % _RULES_BOOST_COMMIT,
-        urls = [
-            "https://github.com/nelhage/rules_boost/archive/%s.tar.gz" % _RULES_BOOST_COMMIT,
-        ],
-    )
-    '''
 
     tf_http_archive(
         name = "jemalloc",
@@ -1066,12 +1055,10 @@ def _tf_repositories():
         build_file = Label("//third_party:spdlog.BUILD"),
     )
 
-    http_archive(
+    new_git_repository(
         name = "com_github_apache_thrift",
-        urls = [
-            "https://github.com/apache/thrift/archive/refs/tags/v{}.zip".format("0.15.0"),
-        ],
-        strip_prefix = "thrift-0.15.0",
+        remote = "https://github.com/apache/thrift",
+        branch = "master",
         build_file = Label("//third_party/thrift:thrift.BUILD"),
     )
 
@@ -1299,16 +1286,17 @@ def _tf_repositories():
         ],
     )
 
-    # http_archive(
-    #     name = "rules_m4",
-    #     urls = ["https://github.com/jmillikin/rules_m4/releases/download/v0.2/rules_m4-v0.2.tar.xz"],
-    #     sha256 = "c67fa9891bb19e9e6c1050003ba648d35383b8cb3c9572f397ad24040fb7f0eb",
-    # )
-
     git_repository(
+        name = "rules_bison",
+        remote = "https://github.com/jmillikin/rules_bison",
+        tag = "v0.2",
+        patch_cmds = ["sed -i '83d' bison/bison.bzl"],
+    )
+
+    http_archive(
         name = "rules_m4",
-        branch = "trunk",
-        remote = "https://github.com/jmillikin/rules_m4",
+        urls = ["https://github.com/jmillikin/rules_m4/releases/download/v0.2/rules_m4-v0.2.tar.xz"],
+        sha256 = "c67fa9891bb19e9e6c1050003ba648d35383b8cb3c9572f397ad24040fb7f0eb",
     )
 
     http_archive(
@@ -1360,12 +1348,6 @@ def _tf_repositories():
         strip_prefix = "gcc-11.2.0",
         build_file = Label("//third_party:libiberty.BUILD"),
         # sha256 = "0a07b8dfc388d5da81fc02e356e6c78a896544c96cc40e8cca41e180a814e16c",
-    )
-
-    http_archive(
-        name = "rules_bison",
-        urls = ["https://github.com/jmillikin/rules_bison/releases/download/v0.2/rules_bison-v0.2.tar.xz"],
-        sha256 = "6ee9b396f450ca9753c3283944f9a6015b61227f8386893fb59d593455141481",
     )
 
     PROXYGEN_VERSION = "2022.01.31.00"
