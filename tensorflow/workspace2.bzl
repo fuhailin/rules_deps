@@ -1091,14 +1091,6 @@ def _tf_repositories():
     )
 
     http_archive(
-        name = "rsocket-cpp",
-        build_file = Label("//third_party:rsocket-cpp.BUILD"),
-        urls = ["https://github.com/rsocket/rsocket-cpp/archive/e377f18abb03a885196385fada0329b50379c8ae.zip"],
-        sha256 = "06e4aae7a6eeafdc1ec17f2c73941e799dedb482e870acc0576d05c74138dcbf",
-        strip_prefix = "rsocket-cpp-e377f18abb03a885196385fada0329b50379c8ae",
-    )
-
-    http_archive(
         name = "flex",
         build_file = Label("//third_party/flex:flex.BUILD"),
         urls = ["https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz"],
@@ -1457,6 +1449,21 @@ def _tf_repositories():
         remote = "https://github.com/msgpack/msgpack-c",
         branch = "cpp_master",
         build_file = Label("//third_party:msgpack.BUILD"),
+    )
+
+    new_git_repository(
+        name = "com_github_dmlc_xgboost",
+        remote = "https://github.com/dmlc/xgboost",
+        branch = "master",
+        build_file = Label("//third_party:xgboost.BUILD"),
+        recursive_init_submodules = True,
+    )
+
+    new_git_repository(
+        name = "com_github_dmlc_dmlc-core",
+        remote = "https://github.com/dmlc/dmlc-core",
+        branch = "main",
+        build_file = Label("//third_party:dmlc-core.BUILD"),
     )
 
 def workspace():
