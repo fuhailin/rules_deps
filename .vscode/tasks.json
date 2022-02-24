@@ -1,0 +1,79 @@
+// Modified to enable debugging using bazel
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Bazel Build (Debug)",
+      "type": "shell",
+      "command": "bazel  build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension} -c dbg",
+      "windows": {
+        "command": "bazel build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension} --experimental_enable_runfiles -c dbg"
+      },
+      "osx": {
+        "command": "bazel build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension} -c dbg --spawn_strategy=local",
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+    },
+    {
+      "label": "Bazel Build (Run)",
+      "type": "shell",
+      "command": "bazel  build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension}",
+      "windows": {
+        "command": "bazel build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension}"
+      },
+      "osx": {
+        "command": "bazel build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension}",
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+    },
+    {
+      "label": "Bazel Build (Run Opt)",
+      "type": "shell",
+      "command": "bazel  build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension} -c opt",
+      "windows": {
+        "command": "bazel build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension} -c opt"
+      },
+      "osx": {
+        "command": "bazel build --cxxopt='-std=c++17' ${relativeFileDirname}:${fileBasenameNoExtension} -c opt",
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+    },
+    {
+      "label": "build active file",
+      "type": "shell",
+      "command": "g++ --std=c++11 ${file} -g -o  ${fileDirname}/${fileBasenameNoExtension}.out",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "osx": {
+        "command": "g++ --std=c++11 ${file} -g -o  ${fileDirname}/${fileBasenameNoExtension}.out",
+      },
+      "windows": {
+        "command": "g++",
+        "args": [
+          "-ggdb",
+          "\"${file}\"",
+          "--std=c++11",
+          "-o",
+          "\"${fileDirname}\\${fileBasenameNoExtension}\""
+        ]
+      }
+    }
+  ]
+}

@@ -20,8 +20,8 @@ BASE_COPTS = [
     "-ggdb",
     "-O0",
     "-fno-omit-frame-pointer",
-    "-gno-statement-frontiers",
-    "-gno-variable-location-views",
+    # "-gno-statement-frontiers",
+    # "-gno-variable-location-views",
     "-Wall",
     # "-rdynamic",
 

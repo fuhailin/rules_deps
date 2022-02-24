@@ -1,0 +1,28 @@
+{
+    "files.associations": {
+        "ostream": "cpp",
+        "string": "cpp",
+        "iosfwd": "cpp",
+        "__split_buffer": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "cstdbool": "cpp",
+        "cstdint": "cpp",
+        "cwctype": "cpp",
+        "unordered_map": "cpp",
+        "unordered_set": "cpp",
+        "ios": "cpp",
+        "__node_handle": "cpp",
+        "regex": "cpp",
+        "sstream": "cpp",
+        "map": "cpp",
+        "optional": "cpp",
+        "queue": "cpp",
+        "set": "cpp",
+        "stack": "cpp"
+    },
+    "bazel.buildifierFixOnFormat": true,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true
+}

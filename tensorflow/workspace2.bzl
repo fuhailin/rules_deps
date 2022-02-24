@@ -1,8 +1,7 @@
 """TensorFlow workspace initialization. Consult the WORKSPACE on how to use it."""
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
-load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 # Import third party config rules.
 load("//tensorflow:version_check.bzl", "check_bazel_version_at_least")
@@ -13,8 +12,8 @@ load("//third_party/nccl:nccl_configure.bzl", "nccl_configure")
 load("//third_party/git:git_configure.bzl", "git_configure")
 load("//third_party/py:python_configure.bzl", "python_configure")
 load("//third_party/systemlibs:syslibs_configure.bzl", "syslibs_configure")
-load("@tf_toolchains//toolchains/cpus/arm:arm_compiler_configure.bzl", "arm_compiler_configure")
-load("@tf_toolchains//toolchains/embedded/arm-linux:arm_linux_toolchain_configure.bzl", "arm_linux_toolchain_configure")
+load("//tensorflow/tools/toolchains:cpus/arm/arm_compiler_configure.bzl", "arm_compiler_configure")
+load("//tensorflow/tools/toolchains:embedded/arm-linux/arm_linux_toolchain_configure.bzl", "arm_linux_toolchain_configure")
 load("//third_party:repo.bzl", "tf_http_archive", "tf_mirror_urls")
 load("//third_party/clang_toolchain:cc_configure_clang.bzl", "cc_download_clang_toolchain")
 load("//tensorflow/tools/def_file_filter:def_file_filter_configure.bzl", "def_file_filter_configure")
@@ -49,14 +48,15 @@ load("//third_party/vulkan_headers:workspace.bzl", vulkan_headers = "repo")
 load("//third_party/tensorrt:workspace.bzl", tensorrt = "repo")
 
 # Import external repository rules.
+load("@bazel_tools//tools/build_defs/repo:java.bzl", "java_import_external")
 load("@io_bazel_rules_closure//closure:defs.bzl", "filegroup_external")
 load("@tf_runtime//:dependencies.bzl", "tfrt_dependencies")
-load("@tf_toolchains//toolchains/remote_config:configs.bzl", "initialize_rbe_configs")
-load("@tf_toolchains//toolchains/remote:configure.bzl", "remote_execution_configure")
-load("@tf_toolchains//toolchains/clang6:repo.bzl", "clang6_configure")
+load("//tensorflow/tools/toolchains/remote_config:configs.bzl", "initialize_rbe_configs")
+load("//tensorflow/tools/toolchains/remote:configure.bzl", "remote_execution_configure")
+load("//tensorflow/tools/toolchains/clang6:repo.bzl", "clang6_configure")
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-load("@com_grail_bazel_compdb//:deps.bzl", "bazel_compdb_deps")
+# load("@com_grail_bazel_compdb//:deps.bzl", "bazel_compdb_deps")
 
 def _initialize_third_party():
     """ Load third party repositories.  See above load() statements. """
@@ -114,7 +114,7 @@ def _tf_toolchains():
     # Point //external/local_config_arm_compiler to //external/arm_compiler
     arm_compiler_configure(
         name = "local_config_arm_compiler",
-        build_file = "@tf_toolchains//toolchains/cpus/arm:BUILD",
+        build_file = "//tensorflow/tools/toolchains/cpus/arm:template.BUILD",
         remote_config_repo_arm = "../arm_compiler",
         remote_config_repo_aarch64 = "../aarch64_compiler",
     )
@@ -122,7 +122,7 @@ def _tf_toolchains():
     # TFLite crossbuild toolchain for embeddeds Linux
     arm_linux_toolchain_configure(
         name = "local_config_embedded_arm",
-        build_file = "@tf_toolchains//toolchains/embedded/arm-linux:BUILD",
+        build_file = "//tensorflow/tools/toolchains/embedded/arm-linux:template.BUILD",
         aarch64_repo = "../aarch64_linux_toolchain",
         armhf_repo = "../armhf_linux_toolchain",
     )
@@ -140,9 +140,9 @@ def _tf_repositories():
     # LINT.IfChange
     tf_http_archive(
         name = "XNNPACK",
-        sha256 = "3afae11087e3e1e31ebb9a9152b8fa9f410d49734fd942bbba3cfc02f4809cf4",
-        strip_prefix = "XNNPACK-322055148b47dccb76bc03ad010f16c1e3a94817",
-        urls = tf_mirror_urls("https://github.com/google/XNNPACK/archive/322055148b47dccb76bc03ad010f16c1e3a94817.zip"),
+        sha256 = "899d307ba5e356607e559f7e0e97257dafb134bae443bb4d98ea71989dbbadc9",
+        strip_prefix = "XNNPACK-7ff11f770a1e803ab9d5c70c82457d496a93965a",
+        urls = tf_mirror_urls("https://github.com/google/XNNPACK/archive/7ff11f770a1e803ab9d5c70c82457d496a93965a.zip"),
     )
     # LINT.ThenChange(//tensorflow/lite/tools/cmake/modules/xnnpack.cmake)
 
@@ -223,7 +223,7 @@ def _tf_repositories():
 
     tf_http_archive(
         name = "aarch64_linux_toolchain",
-        build_file = "@tf_toolchains//toolchains/embedded/arm-linux:aarch64-linux-toolchain.BUILD",
+        build_file = "//tensorflow/tools/toolchains/embedded/arm-linux:aarch64-linux-toolchain.BUILD",
         sha256 = "8ce3e7688a47d8cd2d8e8323f147104ae1c8139520eca50ccf8a7fa933002731",
         strip_prefix = "gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu",
         urls = tf_mirror_urls("https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-aarch64-linux-gnu.tar.xz"),
@@ -231,7 +231,7 @@ def _tf_repositories():
 
     tf_http_archive(
         name = "armhf_linux_toolchain",
-        build_file = "@tf_toolchains//toolchains/embedded/arm-linux:armhf-linux-toolchain.BUILD",
+        build_file = "//tensorflow/tools/toolchains/embedded/arm-linux:armhf-linux-toolchain.BUILD",
         sha256 = "d4f6480ecaa99e977e3833cc8a8e1263f9eecd1ce2d022bb548a24c4f32670f5",
         strip_prefix = "gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf",
         urls = tf_mirror_urls("https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz"),
@@ -304,10 +304,10 @@ def _tf_repositories():
     tf_http_archive(
         name = "org_sqlite",
         build_file = "//third_party:sqlite.BUILD",
-        sha256 = "999826fe4c871f18919fdb8ed7ec9dd8217180854dd1fe21eea96aed36186729",
-        strip_prefix = "sqlite-amalgamation-3360000",
+        sha256 = "b65d2b72ce1296bb4314bbca1bede332a0f789b08a17e3e6e2e7ce6e870cde92",
+        strip_prefix = "sqlite-amalgamation-3370100",
         system_build_file = "//third_party/systemlibs:sqlite.BUILD",
-        urls = tf_mirror_urls("https://www.sqlite.org/2021/sqlite-amalgamation-3360000.zip"),
+        urls = tf_mirror_urls("https://www.sqlite.org/2021/sqlite-amalgamation-3370100.zip"),
     )
 
     tf_http_archive(
@@ -495,15 +495,6 @@ def _tf_repositories():
         sha256 = "62efeb57ff70db9ea2129a16d0f908941e355d09d6d83c9f7b18557c0a7ab59e",
         strip_prefix = "glog-d516278b1cd33cd148e8989aec488b6049a4ca0b",
         urls = tf_mirror_urls("https://github.com/google/glog/archive/d516278b1cd33cd148e8989aec488b6049a4ca0b.zip"),
-    )
-
-    tf_http_archive(
-        name = "curl",
-        build_file = "//third_party:curl.BUILD",
-        sha256 = "ac8e1087711084548d788ef18b9b732c8de887457b81f616fc681d1044b32f98",
-        strip_prefix = "curl-7.81.0",
-        system_build_file = "//third_party/systemlibs:curl.BUILD",
-        urls = tf_mirror_urls("https://curl.haxx.se/download/curl-7.81.0.tar.gz"),
     )
 
     # WARNING: make sure ncteisen@ and vpai@ are cc-ed on any CL to change the below rule
@@ -920,16 +911,6 @@ def _tf_repositories():
         urls = ["https://download.libsodium.org/libsodium/releases/libsodium-1.0.18-stable.tar.gz"],
     )
 
-    # http_archive(
-    #     name = "com_github_curl",
-    #     strip_prefix = "curl-7.74.0",
-    #     build_file = "//third_party:curl.BUILD",
-    #     urls = [
-    #         "https://curl.se/download/curl-7.74.0.tar.gz",
-    #         "https://github.com/curl/curl/releases/download/curl-7_74_0/curl-7.74.0.tar.gz",
-    #     ],
-    # )
-
     http_archive(
         name = "openssl",
         build_file = Label("//third_party/openssl:openssl.BUILD"),
@@ -1072,7 +1053,7 @@ def _tf_repositories():
     )
 
     http_archive(
-        name = "rapidjson",
+        name = "com_github_tencent_rapidjson",
         urls = [
             "https://github.com/Tencent/rapidjson/archive/{}.tar.gz".format("00dbcf2c6e03c47d6c399338b6de060c71356464"),
         ],
@@ -1215,21 +1196,29 @@ def _tf_repositories():
         build_file = Label("//third_party:jemalloc.BUILD"),
     )
 
+    ARROW_VERSION = "f8689a12bb7e4ee9861456c1629637bbf8d5d11c"
     http_archive(
-        name = "apache_arrow",
+        name = "com_github_apache_arrow",
+        build_file = "//third_party/arrow:arrow.BUILD",
+        # patch_cmds = [
+        #     # TODO: Remove the fowllowing once arrow issue is resolved.
+        #     """sed -i.bak 's/type_traits/std::max<int16_t>(sizeof(int16_t), type_traits/g' cpp/src/parquet/column_reader.cc""",
+        #     """sed -i.bak 's/value_byte_size/value_byte_size)/g' cpp/src/parquet/column_reader.cc""",
+        # ],
+        # sha256 = "a27971e2a71c412ae43d998b7b6d06201c7a3da382c804dcdc4a8126ccbabe67",
+        strip_prefix = "arrow-" + ARROW_VERSION,
         urls = [
-            "https://github.com/apache/arrow/archive/refs/tags/apache-arrow-{}.tar.gz".format("5.0.0"),
+            "https://github.com/apache/arrow/archive/{}.zip".format(ARROW_VERSION),
         ],
-        strip_prefix = "arrow-apache-arrow-{}".format("5.0.0"),
-        build_file = Label("//third_party:arrow.BUILD"),
     )
 
+    XSMID_VERSION = "202064d8a4e7f41684bfd91a5bed88cb54aa0ed9"
     http_archive(
-        name = "xsimd",
+        name = "com_github_xtensorstack_xsimd",
         urls = [
-            "https://github.com/xtensor-stack/xsimd/archive/refs/tags/{}.tar.gz".format("7.5.0"),
+            "https://github.com/xtensor-stack/xsimd/archive/{}.zip".format(XSMID_VERSION),
         ],
-        strip_prefix = "xsimd-" + "7.5.0",
+        strip_prefix = "xsimd-" + XSMID_VERSION,
         build_file = Label("//third_party:xsimd.BUILD"),
     )
 
@@ -1316,10 +1305,10 @@ def _tf_repositories():
         name = "libdwarf",
         build_file = Label("//third_party:libdwarf.BUILD"),
         urls = [
-            "https://www.prevanders.net/libdwarf-0.3.1.tar.xz",
+            "https://www.prevanders.net/libdwarf-0.3.3.tar.xz",
         ],
         # sha256 = "86119a9f7c409dc31e02d12c1b3906b1fce0dcb4db3d7e65ebe1bae585cf08f8",
-        strip_prefix = "libdwarf-0.3.1",
+        strip_prefix = "libdwarf-0.3.3",
     )
 
     http_archive(
@@ -1398,7 +1387,7 @@ def _tf_repositories():
         patch_cmds = [
             "mv src/catch2/catch_all.hpp src/catch2/catch.hpp",
         ],
-        branch = "devel",
+        commit = "7cf2f88e50f0d1de324489c31db0314188423b6d",
     )
 
     git_repository(
@@ -1406,6 +1395,34 @@ def _tf_repositories():
         remote = "https://github.com/google/brotli",
         tag = "v1.0.9",
     )
+
+    # http_archive(
+    #     name = "io_opentelemetry_cpp",
+    #     build_file = Label("//third_party:opentelemetry.BUILD"),
+    #     strip_prefix = "opentelemetry-cpp-1.2.0",
+    #     urls = ["https://github.com/open-telemetry/opentelemetry-cpp/archive/refs/tags/v1.2.0.tar.gz"],
+    # )
+
+    http_archive(
+        name = "cares",
+        build_file = Label("//third_party:cares.BUILD"),
+        sha256 = "62dd12f0557918f89ad6f5b759f0bf4727174ae9979499f5452c02be38d9d3e8",
+        strip_prefix = "c-ares-cares-1_14_0",
+        urls = [
+            "https://github.com/c-ares/c-ares/archive/cares-1_14_0.tar.gz",
+        ],
+    )
+
+    # http_archive(
+    #     name = "com_github_curl_curl",
+    #     build_file = "//third_party:curl.BUILD",
+    #     sha256 = "ac8e1087711084548d788ef18b9b732c8de887457b81f616fc681d1044b32f98",
+    #     strip_prefix = "curl-7.81.0",
+    #     urls = [
+    #         "https://curl.se/download/curl-7.81.0.tar.gz",
+    #         "https://github.com/curl/curl/releases/download/curl-7_81_0/curl-7.81.0.tar.gz",
+    #     ],
+    # )
 
     # ===== ICU dependency =====
     # Note: This overrides the dependency from TensorFlow with a version
@@ -1466,6 +1483,16 @@ def _tf_repositories():
         build_file = Label("//third_party:dmlc-core.BUILD"),
     )
 
+    http_archive(
+        name = "sparsehash_c11",
+        build_file = Label("//third_party:sparsehash_c11.BUILD"),
+        sha256 = "d4a43cad1e27646ff0ef3a8ce3e18540dbcb1fdec6cc1d1cb9b5095a9ca2a755",
+        strip_prefix = "sparsehash-c11-2.11.1",
+        urls = [
+            "https://github.com/sparsehash/sparsehash-c11/archive/v2.11.1.tar.gz",
+        ],
+    )
+
 def workspace():
     # Check the bazel version before executing any repository rules, in case
     # those rules rely on the version we require here.
@@ -1491,7 +1518,7 @@ def workspace():
     rules_pkg_dependencies()
 
     rules_foreign_cc_dependencies()
-    bazel_compdb_deps()
+    # bazel_compdb_deps()
 
 # Alias so it can be loaded without assigning to a different symbol to prevent
 # shadowing previous loads and trigger a buildifier warning.

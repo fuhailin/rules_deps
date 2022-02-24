@@ -13,7 +13,7 @@
 # limitations under the License.
 
 load("@rules_bison//bison:bison.bzl", "bison")
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 load("@rules_foreign_cc//foreign_cc:defs.bzl", "configure_make")
 load("@rules_flex//flex:flex.bzl", "flex")
 load("@org_tensorflow//tensorflow:copts.bzl", "DEFAULT_CPP_COPTS", "DEFAULT_LINKOPTS")
@@ -116,7 +116,7 @@ configure_make(
     out_static_libs = [
         "libthrift.a",
         "libthriftnb.a",
-        "libthriftz.a",
+        # "libthriftz.a",
     ],
     deps = [
         "@boost",

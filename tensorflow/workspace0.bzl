@@ -15,6 +15,7 @@ load("@com_github_jupp0r_prometheus_cpp//bazel:repositories.bzl", "prometheus_cp
 load("@rules_m4//m4:m4.bzl", "m4_register_toolchains")
 load("@rules_flex//flex:flex.bzl", "flex_register_toolchains")
 load("@rules_bison//bison:bison.bzl", "bison_register_toolchains")
+# load("@io_opentelemetry_cpp//bazel:repository.bzl", "opentelemetry_cpp_deps")
 
 def _tf_bind():
     """Bind targets for some external repositories"""
@@ -116,6 +117,20 @@ def workspace():
     bazel_toolchains_repositories()
 
     # Apple rules for Bazel. https://github.com/bazelbuild/rules_apple.
+    # TODO(mihaimaruseac): We add this to fix Kokoro builds.
+    # The rules below call into `rules_proto` but the hash has changed and
+    # Bazel refuses to continue. So, we add our own mirror.
+    http_archive(
+        name = "rules_proto",
+        sha256 = "20b240eba17a36be4b0b22635aca63053913d5c1ee36e16be36499d167a2f533",
+        strip_prefix = "rules_proto-11bf7c25e666dd7ddacbcd4d4c4a9de7a25175f8",
+        urls = [
+            "https://storage.googleapis.com/mirror.tensorflow.org/github.com/bazelbuild/rules_proto/archive/11bf7c25e666dd7ddacbcd4d4c4a9de7a25175f8.tar.gz",
+            "https://github.com/bazelbuild/rules_proto/archive/11bf7c25e666dd7ddacbcd4d4c4a9de7a25175f8.tar.gz",
+        ],
+    )
+
+    # Now, finally use the rules
     apple_rules_dependencies()
     swift_rules_dependencies()
     apple_support_dependencies()
@@ -134,6 +149,8 @@ def workspace():
     m4_register_toolchains()
     flex_register_toolchains()
     bison_register_toolchains()
+
+    # opentelemetry_cpp_deps()
 
 # Alias so it can be loaded without assigning to a different symbol to prevent
 # shadowing previous loads and trigger a buildifier warning.

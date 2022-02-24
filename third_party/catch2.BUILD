@@ -1,6 +1,4 @@
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
 load("@rules_cc//cc:defs.bzl", "cc_library")
-load("@org_tensorflow//tensorflow:copts.bzl", "DEFAULT_CPP_COPTS")
 
 package(default_visibility = ["//visibility:public"])
 

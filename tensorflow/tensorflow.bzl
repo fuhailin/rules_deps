@@ -2027,7 +2027,7 @@ def tf_custom_op_library_additional_deps():
         "@com_google_protobuf//:protobuf_headers",  # copybara:comment
         clean_dep("//third_party/eigen3"),
         clean_dep("//tensorflow/core:framework_headers_lib"),
-    ] + if_windows([clean_dep("//tensorflow/python:pywrap_tensorflow_import_lib")])
+    ]
 
 # A list of targets that contains the implementation of
 # tf_custom_op_library_additional_deps. It's used to generate a DEF file for
@@ -2125,6 +2125,8 @@ def tf_custom_op_library(name, srcs = [], gpu_srcs = [], deps = [], linkopts = [
     ]) + if_cuda([
         "@local_config_cuda//cuda:cuda_headers",
         "@local_config_cuda//cuda:cudart_static",
+    ]) + if_windows([
+        clean_dep("//tensorflow/python:pywrap_tensorflow_import_lib"),
     ]) + tf_custom_op_library_additional_deps()
 
     # Override EIGEN_STRONG_INLINE to inline when
@@ -2884,6 +2886,29 @@ def cc_library_with_android_deps(
 def tensorflow_opensource_extra_deps():
     return []
 
+# Builds a pybind11 compatible library.
+def pybind_library(
+        name,
+        copts = [],
+        features = [],
+        tags = [],
+        deps = [],
+        **kwargs):
+    # Mark common dependencies as required for build_cleaner.
+    tags = tags + ["req_dep=@pybind11", "req_dep=@local_config_python//:python_headers"]
+
+    native.cc_library(
+        name = name,
+        copts = copts + ["-fexceptions"],
+        features = features + [
+            "-use_header_modules",  # Required for pybind11.
+            "-parse_headers",
+        ],
+        tags = tags,
+        deps = deps + ["@pybind11", "@local_config_python//:python_headers"],
+        **kwargs
+    )
+
 # buildozer: disable=function-docstring-args
 def pybind_extension(
         name,
@@ -3169,7 +3194,7 @@ def tf_python_pybind_static_deps():
         "@pthreadpool//:__subpackages__",
         "@pybind11//:__subpackages__",
         "@ruy//:__subpackages__",
-        "@com_github_google_snappy//:snappy//:__subpackages__",
+        "@com_github_google_snappy//:__subpackages__",
         "@sobol_data//:__subpackages__",
         "@upb//:__subpackages__",
         "@zlib//:__subpackages__",

@@ -1,5 +1,3 @@
-load("@bazel_skylib//lib:selects.bzl", "selects")
-load("@bazel_skylib//rules:common_settings.bzl", "bool_flag")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 
 package(default_visibility = ["//visibility:public"])
@@ -18,7 +16,7 @@ build_test(
     targets = [
         "@mkl_dnn_v1//:mkl_dnn",
         "@com_github_jupp0r_prometheus_cpp//push",
-        "@rapidjson//:rapidjson",
+        "@com_github_tencent_rapidjson//:rapidjson",
         "@libevent//:libevent",
         "@com_google_absl//absl/strings",
         "@nlohmann_json_lib//:nlohmann_json",
@@ -62,7 +60,7 @@ build_test(
         "@cityhash",
         "@openblas",
         "@eigen",
-        "@xsimd",
+        "@com_github_xtensorstack_xsimd//:xsimd",
         "@org_gnu_bison//:bison",
         "@org_gnu_bison//:yacc_bin",
         "@org_gnu_m4//:m4",
@@ -78,9 +76,6 @@ build_test(
         "@com_pagure_libaio//:libaio",
         "@libdwarf",
         "@libunwind",
-        "@com_github_facebookincubator_fizz//:fizz",
-        "@com_github_facebook_wangle//:wangle",
-        "@com_github_facebook_proxygen//:proxygen",
         "@com_github_facebook_fatal//:fatal",
         "@com_github_cyan4973_xxhash//:xxhash",
         "@rules_m4//m4:current_m4_toolchain",
@@ -88,20 +83,58 @@ build_test(
         "@boost",
         "@com_github_catchorg_Catch2//:catch2",
         "@com_github_catchorg_Catch2//:catch2_main",
-        "@com_github_apache_thrift//:thriftl",
-        "@com_github_apache_thrift//:copy_thrifty",
-        "@com_github_apache_thrift//:thrift",
-        "@com_github_apache_thrift//:thriftc",
-        "@com_github_facebook_folly//:folly",
-        "@com_github_facebook_fbthrift//:fbthrift",
+        # "@com_github_apache_thrift//:thriftl",
+        # "@com_github_apache_thrift//:copy_thrifty",
+        # "@com_github_apache_thrift//:thrift",
+        # "@com_github_apache_thrift//:thriftc",
+        # "@com_github_facebook_folly//:folly",
+        # "@com_github_facebook_fbthrift//:fbthrift",
+        "@com_github_google_brotli//:brotli",
     ],
 )
 
 build_test(
     name = "build_test_linux",
     targets = [
-        "@com_github_dmlc_dmlc-core//:dmlc-core",
-        "@com_github_dmlc_xgboost//:xgboost",
+        # "@io_opentelemetry_cpp//:opentelemetry",
+        "@com_github_facebookincubator_fizz//:fizz",
+        "@com_github_facebook_wangle//:wangle",
+        "@com_github_facebook_proxygen//:proxygen",
+        "@com_github_apache_thrift//:thriftl",
+        "@com_github_apache_thrift//:copy_thrifty",
+        "@com_github_apache_thrift//:thrift",
+        "@com_github_apache_thrift//:thriftc",
+        "@com_github_facebook_folly//:folly",
+        "@com_github_facebook_fbthrift//:fbthrift",
+
+        # "@io_opentelemetry_cpp//exporters/ostream:ostream_span_exporter",
+        # "@io_opentelemetry_cpp//exporters/otlp:otlp_http_exporter",
+
+        # "@io_opentelemetry_cpp//:common_proto_cc",
+        # "@com_github_xtensorstack_xsimd//:xsimd",
+        # "@com_github_apache_arrow//:arrow",
+        # "@curl",
+
+        # "@io_opentelemetry_cpp//api",
+        # "@io_opentelemetry_cpp",
+        # "@boringssl//:crypto",
+        # "@com_github_facebook_fbthrift//:fbthrift",
+        # "@com_github_facebook_zstd//:zstd",
+        # "@com_github_google_brotli//:brotli",
+        # "@com_github_google_double_conversion//:double-conversion",
+        # "@com_github_google_snappy//:snappy",
+        # "@com_github_tencent_rapidjson//:rapidjson",
+        # "@com_github_xtensor-stack_xsimd//:xsimd",
+        # "@lz4",
+        # "@org_bzip_bzip2//:bzip2",
+        # "@zlib",
+    ],
+)
+
+build_test(
+    name = "build_test_mac",
+    targets = [
+        "@sparsehash_c11//:dense_hash_map",
     ],
 )
 
