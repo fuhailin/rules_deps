@@ -3152,7 +3152,6 @@ def tf_python_pybind_static_deps():
         "@com_google_absl//:__subpackages__",
         "@com_google_benchmark//:__subpackages__",  # testonly
         "@com_google_googleapis//:__subpackages__",
-        "@com_google_googletest//:__subpackages__",  # testonly
         "@com_google_protobuf//:__subpackages__",
         "@com_googlesource_code_re2//:__subpackages__",
         "@compute_library//:__subpackages__",

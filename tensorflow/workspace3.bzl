@@ -91,13 +91,6 @@ def workspace():
     # but provides a script for setting up build rules via overlays.
     llvm("llvm-raw")
 
-    # http_archive(
-    #     name = "com_grail_bazel_compdb",
-    #     sha256 = "d32835b26dd35aad8fd0ba0d712265df6565a3ad860d39e4c01ad41059ea7eda",
-    #     strip_prefix = "bazel-compilation-database-0.5.2",
-    #     urls = ["https://github.com/grailbio/bazel-compilation-database/archive/0.5.2.tar.gz"],
-    # )
-
     # native.local_repository(
     #     name = "cpp3rd_lib",
     #     path = "/root/fuhailin/projects/cpp3rd_lib",

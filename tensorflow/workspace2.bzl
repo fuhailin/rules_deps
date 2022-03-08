@@ -21,14 +21,7 @@ load("//third_party/llvm:setup.bzl", "llvm_setup")
 
 # Import third party repository rules. See go/tfbr-thirdparty.
 load("//third_party/FP16:workspace.bzl", FP16 = "repo")
-load("//third_party/absl:workspace.bzl", absl = "repo")
-load("//third_party/benchmark:workspace.bzl", benchmark = "repo")
-load("//third_party/clog:workspace.bzl", clog = "repo")
-load("//third_party/cpuinfo:workspace.bzl", cpuinfo = "repo")
-load("//third_party/dlpack:workspace.bzl", dlpack = "repo")
-load("//third_party/eigen3:workspace.bzl", eigen3 = "repo")
 load("//third_party/farmhash:workspace.bzl", farmhash = "repo")
-load("//third_party/flatbuffers:workspace.bzl", flatbuffers = "repo")
 load("//third_party/gemmlowp:workspace.bzl", gemmlowp = "repo")
 load("//third_party/hexagon:workspace.bzl", hexagon_nn = "repo")
 load("//third_party/highwayhash:workspace.bzl", highwayhash = "repo")
@@ -56,19 +49,11 @@ load("//tensorflow/tools/toolchains/remote:configure.bzl", "remote_execution_con
 load("//tensorflow/tools/toolchains/clang6:repo.bzl", "clang6_configure")
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 load("@rules_foreign_cc//foreign_cc:repositories.bzl", "rules_foreign_cc_dependencies")
-# load("@com_grail_bazel_compdb//:deps.bzl", "bazel_compdb_deps")
 
 def _initialize_third_party():
     """ Load third party repositories.  See above load() statements. """
     FP16()
-    absl()
-    benchmark()
-    clog()
-    cpuinfo()
-    dlpack()
-    eigen3()
     farmhash()
-    flatbuffers()
     gemmlowp()
     hexagon_nn()
     highwayhash()
@@ -409,20 +394,6 @@ def _tf_repositories():
     )
 
     tf_http_archive(
-        name = "absl_py",
-        sha256 = "a7c51b2a0aa6357a9cbb2d9437e8cd787200531867dc02565218930b6a32166e",
-        strip_prefix = "abseil-py-1.0.0",
-        system_build_file = "//third_party/systemlibs:absl_py.BUILD",
-        system_link_files = {
-            "//third_party/systemlibs:absl_py.absl.BUILD": "absl/BUILD",
-            "//third_party/systemlibs:absl_py.absl.flags.BUILD": "absl/flags/BUILD",
-            "//third_party/systemlibs:absl_py.absl.testing.BUILD": "absl/testing/BUILD",
-            "//third_party/systemlibs:absl_py.absl.logging.BUILD": "absl/logging/BUILD",
-        },
-        urls = tf_mirror_urls("https://github.com/abseil/abseil-py/archive/refs/tags/v1.0.0.tar.gz"),
-    )
-
-    tf_http_archive(
         name = "dill_archive",
         build_file = "//third_party:dill.BUILD",
         system_build_file = "//third_party/systemlibs:dill.BUILD",
@@ -448,23 +419,21 @@ def _tf_repositories():
         },
     )
 
-    tf_http_archive(
+    PROTOBUF_VERSION = "3.19.4"
+    http_archive(
         name = "com_google_protobuf",
-        # patch_file = "//third_party/protobuf:protobuf.patch",
-        sha256 = "25f1292d4ea6666f460a2a30038eef121e6c3937ae0f61d610611dfb14b0bd32",
-        strip_prefix = "protobuf-3.19.1",
-        system_build_file = "//third_party/systemlibs:protobuf.BUILD",
-        system_link_files = {
-            "//third_party/systemlibs:protobuf.bzl": "protobuf.bzl",
-            "//third_party/systemlibs:protobuf_deps.bzl": "protobuf_deps.bzl",
-        },
-        urls = tf_mirror_urls("https://github.com/protocolbuffers/protobuf/archive/v3.19.1.zip"),
+        strip_prefix = "protobuf-" + PROTOBUF_VERSION,
+        urls = [
+            "https://github.com/protocolbuffers/protobuf/archive/v{}.zip".format(PROTOBUF_VERSION),
+        ],
     )
 
     http_archive(
         name = "com_google_protobuf_javalite",
-        strip_prefix = "protobuf-3.19.1",
-        urls = ["https://github.com/protocolbuffers/protobuf/archive/v3.19.1.zip"],
+        strip_prefix = "protobuf-" + PROTOBUF_VERSION,
+        urls = [
+            "https://github.com/protocolbuffers/protobuf/archive/v{}.zip".format(PROTOBUF_VERSION),
+        ],
     )
 
     tf_http_archive(
@@ -476,11 +445,10 @@ def _tf_repositories():
         urls = tf_mirror_urls("https://github.com/google/nsync/archive/1.22.0.tar.gz"),
     )
 
-    tf_http_archive(
+    http_archive(
         name = "com_google_googletest",
-        sha256 = "bc1cc26d1120f5a7e9eb450751c0b24160734e46a02823a573f3c6b6c0a574a7",
-        strip_prefix = "googletest-e2c06aa2497e330bab1c1a03d02f7c5096eb5b0b",
-        urls = tf_mirror_urls("https://github.com/google/googletest/archive/e2c06aa2497e330bab1c1a03d02f7c5096eb5b0b.zip"),
+        urls = ["https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip"],
+        strip_prefix = "googletest-609281088cfefc76f9d0ce82e1ff6c30cc3591e5",
     )
 
     tf_http_archive(
@@ -490,30 +458,20 @@ def _tf_repositories():
         urls = tf_mirror_urls("https://github.com/gflags/gflags/archive/v2.2.2.tar.gz"),
     )
 
-    tf_http_archive(
+    http_archive(
         name = "com_github_google_glog",
-        sha256 = "62efeb57ff70db9ea2129a16d0f908941e355d09d6d83c9f7b18557c0a7ab59e",
-        strip_prefix = "glog-d516278b1cd33cd148e8989aec488b6049a4ca0b",
-        urls = tf_mirror_urls("https://github.com/google/glog/archive/d516278b1cd33cd148e8989aec488b6049a4ca0b.zip"),
+        sha256 = "21bc744fb7f2fa701ee8db339ded7dce4f975d0d55837a97be7d46e8382dea5a",
+        strip_prefix = "glog-0.5.0",
+        urls = ["https://github.com/google/glog/archive/v0.5.0.zip"],
     )
 
     # WARNING: make sure ncteisen@ and vpai@ are cc-ed on any CL to change the below rule
-    tf_http_archive(
+    http_archive(
         name = "com_github_grpc_grpc",
-        sha256 = "b956598d8cbe168b5ee717b5dafa56563eb5201a947856a6688bbeac9cac4e1f",
-        strip_prefix = "grpc-b54a5b338637f92bfcf4b0bc05e0f57a5fd8fadd",
-        system_build_file = "//third_party/systemlibs:grpc.BUILD",
-        patch_file = ["//third_party/grpc:generate_cc_env_fix.patch"],
-        system_link_files = {
-            "//third_party/systemlibs:BUILD": "bazel/BUILD",
-            "//third_party/systemlibs:grpc.BUILD": "src/compiler/BUILD",
-            "//third_party/systemlibs:grpc.bazel.grpc_deps.bzl": "bazel/grpc_deps.bzl",
-            "//third_party/systemlibs:grpc.bazel.grpc_extra_deps.bzl": "bazel/grpc_extra_deps.bzl",
-            "//third_party/systemlibs:grpc.bazel.cc_grpc_library.bzl": "bazel/cc_grpc_library.bzl",
-            "//third_party/systemlibs:grpc.bazel.generate_cc.bzl": "bazel/generate_cc.bzl",
-            "//third_party/systemlibs:grpc.bazel.protobuf.bzl": "bazel/protobuf.bzl",
-        },
-        urls = tf_mirror_urls("https://github.com/grpc/grpc/archive/b54a5b338637f92bfcf4b0bc05e0f57a5fd8fadd.tar.gz"),
+        strip_prefix = "grpc-1.44.0",
+        urls = [
+            "https://github.com/grpc/grpc/archive/refs/tags/v1.44.0.tar.gz",
+        ],
     )
 
     tf_http_archive(
@@ -1079,14 +1037,14 @@ def _tf_repositories():
         strip_prefix = "flex-2.6.4",
     )
 
-    # http_archive(
-    #     name = "com_google_absl",
-    #     urls = [
-    #         "https://github.com/abseil/abseil-cpp/archive/20200923.3.tar.gz",
-    #         "https://github.91chifun.workers.dev/https://github.com//abseil/abseil-cpp/archive/20200923.3.tar.gz",
-    #     ],
-    #     strip_prefix = "abseil-cpp-20200923.3",
-    # )
+    http_archive(
+        name = "com_google_absl",
+        urls = [
+            "https://github.com/abseil/abseil-cpp/archive/refs/tags/20211102.0.tar.gz",
+        ],
+        strip_prefix = "abseil-cpp-20211102.0",
+        sha256 = "dcf71b9cba8dc0ca9940c4b316a0c796be8fab42b070bb6b7cab62b48f0e66c4",
+    )
 
     http_archive(
         name = "cityhash",
@@ -1185,6 +1143,7 @@ def _tf_repositories():
             "https://github.com/google/flatbuffers/archive/v{}.tar.gz".format("1.12.0"),
         ],
         strip_prefix = "flatbuffers-" + "1.12.0",
+        sha256 = "62f2223fb9181d1d6338451375628975775f7522185266cd5296571ac152bc45",
     )
 
     http_archive(
@@ -1271,7 +1230,7 @@ def _tf_repositories():
         name = "rules_bison",
         remote = "https://github.com/jmillikin/rules_bison",
         tag = "v0.2",
-        patch_cmds = ["sed -i '83d' bison/bison.bzl"],
+        # patch_cmds = ["sed -i '83d' bison/bison.bzl"],
     )
 
     http_archive(
@@ -1284,7 +1243,7 @@ def _tf_repositories():
         name = "rules_flex",
         urls = ["https://github.com/jmillikin/rules_flex/releases/download/v0.2/rules_flex-v0.2.tar.xz"],
         sha256 = "f1685512937c2e33a7ebc4d5c6cf38ed282c2ce3b7a9c7c0b542db7e5db59d52",
-        patch_cmds = ["sed -i '76d' flex/flex.bzl"],
+        # patch_cmds = ["sed -i '76d' flex/flex.bzl"],
     )
 
     http_archive(
@@ -1493,6 +1452,47 @@ def _tf_repositories():
         ],
     )
 
+    BM_COMMIT = "1.6.1"
+    http_archive(
+        name = "com_google_benchmark",
+        sha256 = "6132883bc8c9b0df5375b16ab520fac1a85dc9e4cf5be59480448ece74b278d4",
+        strip_prefix = "benchmark-{}".format(BM_COMMIT),
+        build_file = Label("//third_party:benchmark.BUILD"),
+        urls = [
+            "https://github.com/google/benchmark/archive/refs/tags/v{}.tar.gz".format(BM_COMMIT),
+        ],
+    )
+
+    tf_http_archive(
+        name = "clog",
+        strip_prefix = "cpuinfo-d5e37adf1406cf899d7d9ec1d317c47506ccb970",
+        sha256 = "3f2dc1970f397a0e59db72f9fca6ff144b216895c1d606f6c94a507c1e53a025",
+        urls = tf_mirror_urls("https://github.com/pytorch/cpuinfo/archive/d5e37adf1406cf899d7d9ec1d317c47506ccb970.tar.gz"),
+        build_file = "//third_party:clog.BUILD",
+    )
+
+    tf_http_archive(
+        name = "cpuinfo",
+        strip_prefix = "cpuinfo-5916273f79a21551890fd3d56fc5375a78d1598d",
+        sha256 = "2a160c527d3c58085ce260f34f9e2b161adc009b34186a2baf24e74376e89e6d",
+        urls = tf_mirror_urls("https://github.com/pytorch/cpuinfo/archive/5916273f79a21551890fd3d56fc5375a78d1598d.zip"),
+        build_file = "//third_party:cpuinfo.BUILD",
+    )
+
+    tf_http_archive(
+        name = "dlpack",
+        strip_prefix = "dlpack-790d7a083520398268d92d0bd61cf85dfa32ee98",
+        sha256 = "147cc89904375dcd0b0d664a2b72dfadbb02058800ad8cba84516094bc406208",
+        urls = tf_mirror_urls("https://github.com/dmlc/dlpack/archive/790d7a083520398268d92d0bd61cf85dfa32ee98.tar.gz"),
+        build_file = "//third_party:dlpack.BUILD",
+    )
+
+    http_archive(
+        name = "com_grail_bazel_compdb",
+        strip_prefix = "bazel-compilation-database-0.5.2",
+        urls = ["https://github.com/grailbio/bazel-compilation-database/archive/0.5.2.tar.gz"],
+    )
+
 def workspace():
     # Check the bazel version before executing any repository rules, in case
     # those rules rely on the version we require here.
@@ -1518,7 +1518,6 @@ def workspace():
     rules_pkg_dependencies()
 
     rules_foreign_cc_dependencies()
-    # bazel_compdb_deps()
 
 # Alias so it can be loaded without assigning to a different symbol to prevent
 # shadowing previous loads and trigger a buildifier warning.
