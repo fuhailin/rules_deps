@@ -1,11 +1,7 @@
-# This BUILD file shows how to use protobuf with bazel. Before you can use
-# proto_library/<lang>_proto_library rules in a BUILD file, you need to
-# include protobuf repo as remote repositories in your WORKSPACE file. See
-# the WORKSPACE file in the same directory with this BUILD file for an
-# example.
-
-load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_proto_library")
+load("@rules_cc//cc:defs.bzl", "cc_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
+
+package(default_visibility = ["//visibility:public"])
 
 # For each .proto file, a proto_library target should be defined. This target
 # is not bound to any particular language. Instead, it defines the dependency
@@ -30,22 +26,40 @@ cc_proto_library(
     deps = [":meta_proto"],
 )
 
+# Public C++ headers for the Flatbuffers library.
+filegroup(
+    name = "ps_headers",
+    srcs = glob([
+        "include/dmlc/*.h",
+        "include/ps/*.h",
+        "include/ps/internal/*.h",
+    ]),
+)
+
 cc_library(
-    name = "pslite",
-    srcs = glob(
-        [
-            "src/windows/*.h",
-            "src/*.h",
-            "src/*.cc",
-        ],
-        # exclude = ["src/main.cpp"],
-    ),
-    hdrs = glob(
-        [
-            "include/dmlc/*.h",
-            "include/ps/*.h",
-        ],
-    ),
+    name = "meta_cc_proto_hdrs",
+    hdrs = [
+        ":meta_cc_proto",
+    ],
+    strip_include_prefix = "src",
+)
+
+cc_library(
+    name = "ps-lite",
+    srcs = glob([
+        "src/windows/*.h",
+        "src/*.h",
+        "src/*.cc",
+    ]),
+    hdrs = [
+        "//:ps_headers",
+    ],
+    linkstatic = 1,
+    strip_include_prefix = "/include",
     visibility = ["//visibility:public"],
-    deps = [":meta_cc_proto"],
+    deps = [
+        ":meta_cc_proto",
+        ":meta_cc_proto_hdrs",
+        "@zeromq//:libzmq",
+    ],
 )

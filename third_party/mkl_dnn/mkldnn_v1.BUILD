@@ -1,16 +1,6 @@
-exports_files(["LICENSE"])
-
-load(
-    "@org_tensorflow//third_party/mkl:build_defs.bzl",
-    "if_mkl",
-)
 load(
     "@org_tensorflow//tensorflow:tensorflow.bzl",
     "tf_openmp_copts",
-)
-load(
-    "@org_tensorflow//third_party/mkl_dnn:build_defs.bzl",
-    "if_mkldnn_openmp",
 )
 load(
     "@org_tensorflow//third_party/mkl:build_defs.bzl",
@@ -20,6 +10,8 @@ load(
     "@org_tensorflow//third_party:common.bzl",
     "template_rule",
 )
+
+exports_files(["LICENSE"])
 
 _DNNL_RUNTIME_OMP = {
     "#cmakedefine DNNL_CPU_THREADING_RUNTIME DNNL_RUNTIME_${DNNL_CPU_THREADING_RUNTIME}": "#define DNNL_CPU_THREADING_RUNTIME DNNL_RUNTIME_OMP",

@@ -1,7 +1,7 @@
 """TensorFlow workspace initialization. Consult the WORKSPACE on how to use it."""
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 load("//third_party:tf_runtime/workspace.bzl", tf_runtime = "repo")
 load("//third_party/llvm:workspace.bzl", llvm = "repo")
 
@@ -73,18 +73,12 @@ def workspace():
     )
 
     # '''
-    '''
-    native.local_repository(
+
+    new_git_repository(
         name = "ps-lite",
-        path = "/root/fuhailin/projects/ps-lite",
-    )
-    '''
-    git_repository(
-        name = "ps-lite",
-        # branch = "master",
-        remote = "https://github.com/fuhailin/ps-lite.git",
-        commit = "915b482384e8d2666d8ae3954acd05c8c0d4caff",
-        shallow_since = "1638608383 +0800",
+        remote = "https://github.com/dmlc/ps-lite",
+        commit = "08fb534cd1f58dd3b6a83eba44b508b0eb9a52ce",
+        build_file = Label("//third_party:pslite.BUILD"),
     )
 
     # Load the raw llvm-project.  llvm does not have build rules set up by default,

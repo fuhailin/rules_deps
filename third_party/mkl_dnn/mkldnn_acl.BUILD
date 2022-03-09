@@ -1,9 +1,9 @@
-exports_files(["LICENSE"])
-
 load(
     "@org_tensorflow//third_party:common.bzl",
     "template_rule",
 )
+
+exports_files(["LICENSE"])
 
 _DNNL_RUNTIME_OMP = {
     "#cmakedefine DNNL_CPU_THREADING_RUNTIME DNNL_RUNTIME_${DNNL_CPU_THREADING_RUNTIME}": "#define DNNL_CPU_THREADING_RUNTIME DNNL_RUNTIME_OMP",

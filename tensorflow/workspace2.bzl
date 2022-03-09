@@ -451,11 +451,10 @@ def _tf_repositories():
         strip_prefix = "googletest-609281088cfefc76f9d0ce82e1ff6c30cc3591e5",
     )
 
-    tf_http_archive(
+    git_repository(
         name = "com_github_gflags_gflags",
-        sha256 = "34af2f15cf7367513b352bdcd2493ab14ce43692d2dcd9dfc499492966c64dcf",
-        strip_prefix = "gflags-2.2.2",
-        urls = tf_mirror_urls("https://github.com/gflags/gflags/archive/v2.2.2.tar.gz"),
+        remote = "https://github.com/gflags/gflags.git",
+        tag = "v2.2.2",
     )
 
     http_archive(
