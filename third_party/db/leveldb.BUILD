@@ -21,13 +21,13 @@ cmake(
         # 'http_archive'.
         "LEVELDB_BUILD_TESTS": "OFF",
         "LEVELDB_BUILD_BENCHMARKS": "OFF",
-        # "HAVE_SNAPPY": "OFF",
+        "HAVE_SNAPPY": "OFF",
     },
     lib_source = ":all_srcs",
     linkopts = ["-lpthread"],
     out_static_libs = ["libleveldb.a"],
-    # deps = [
-    #     "@com_google_googletest//:gtest",
-    #     "@com_github_google_snappy//:snappy",
-    # ],
+    deps = [
+        # "@com_google_googletest//:gtest",
+        "@com_github_google_snappy//:snappy",
+    ],
 )

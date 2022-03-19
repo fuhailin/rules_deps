@@ -913,7 +913,6 @@ def _tf_repositories():
     http_archive(
         name = "com_github_google_leveldb",
         urls = [
-            "https://github.com.cnpmjs.org/google/leveldb/archive/refs/tags/{}.tar.gz".format("1.23"),
             "https://github.com/google/leveldb/archive/refs/tags/{}.tar.gz".format("1.23"),
         ],
         strip_prefix = "leveldb-" + "1.23",
@@ -929,13 +928,13 @@ def _tf_repositories():
         build_file = Label("//third_party/db:redispp.BUILD"),
     )
 
-    ROCKSDB_VERSION = "6.15.5"
-    ROCKSDB_SHA256 = "d7b994e1eb4dff9dfefcd51a63f86630282e1927fc42a300b93c573c853aa5d0"
+    ROCKSDB_VERSION = "7.0.2"
+    # ROCKSDB_SHA256 = "d7b994e1eb4dff9dfefcd51a63f86630282e1927fc42a300b93c573c853aa5d0"
 
     http_archive(
         name = "com_github_facebook_rocksdb",
         build_file = Label("//third_party/db:rocksdb.BUILD"),
-        sha256 = ROCKSDB_SHA256,
+        # sha256 = ROCKSDB_SHA256,
         strip_prefix = "rocksdb-{version}".format(version = ROCKSDB_VERSION),
         url = "https://github.com/facebook/rocksdb/archive/v{version}.tar.gz".format(version = ROCKSDB_VERSION),
     )
@@ -1128,11 +1127,11 @@ def _tf_repositories():
     http_archive(
         name = "openblas",
         urls = [
-            "https://github.com/xianyi/OpenBLAS/releases/download/v{tag}/OpenBLAS-{tag}.tar.gz".format(tag = "0.3.19"),
+            "https://github.com/xianyi/OpenBLAS/releases/download/v{tag}/OpenBLAS-{tag}.tar.gz".format(tag = "0.3.20"),
         ],
         type = "tar.gz",
-        strip_prefix = "OpenBLAS-{}".format("0.3.19"),
-        sha256 = "947f51bfe50c2a0749304fbe373e00e7637600b0a47b78a51382aeb30ca08562",
+        strip_prefix = "OpenBLAS-{}".format("0.3.20"),
+        # sha256 = "947f51bfe50c2a0749304fbe373e00e7637600b0a47b78a51382aeb30ca08562",
         build_file = Label("//third_party:openblas.BUILD"),
     )
 

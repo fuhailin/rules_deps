@@ -1,7 +1,7 @@
 """TensorFlow workspace initialization. Consult the WORKSPACE on how to use it."""
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "new_git_repository")
 load("//third_party:tf_runtime/workspace.bzl", tf_runtime = "repo")
 load("//third_party/llvm:workspace.bzl", llvm = "repo")
 
@@ -57,12 +57,12 @@ def workspace():
         ],
     )
 
-    # '''
+    '''
     git_repository(
         name = "rules_compressor",
         # branch = "main",
         remote = "https://github.com/fuhailin/rules_compressor.git",
-        commit = "dc47f619c01999b370ac9ebbbadfb76c31b96f04",
+        commit = "6e833282f10bfa019eb0f79abfde49c9c099574a",
         # shallow_since = "1644497009 +0800",
     )
     '''
@@ -71,7 +71,6 @@ def workspace():
         # path = "/root/projects/rules_compressor",
         path = "/Users/vincent/Documents/projects/rules_compressor",
     )
-
     # '''
 
     new_git_repository(
