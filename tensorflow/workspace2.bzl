@@ -420,12 +420,10 @@ def _tf_repositories():
     )
 
     PROTOBUF_VERSION = "3.19.4"
-    http_archive(
+    git_repository(
         name = "com_google_protobuf",
-        strip_prefix = "protobuf-" + PROTOBUF_VERSION,
-        urls = [
-            "https://github.com/protocolbuffers/protobuf/archive/v{}.zip".format(PROTOBUF_VERSION),
-        ],
+        remote = "https://github.com/protocolbuffers/protobuf",
+        tag = "v" + PROTOBUF_VERSION,
     )
 
     http_archive(
@@ -464,13 +462,10 @@ def _tf_repositories():
         urls = ["https://github.com/google/glog/archive/v0.5.0.zip"],
     )
 
-    # WARNING: make sure ncteisen@ and vpai@ are cc-ed on any CL to change the below rule
-    http_archive(
+    git_repository(
         name = "com_github_grpc_grpc",
-        strip_prefix = "grpc-1.44.0",
-        urls = [
-            "https://github.com/grpc/grpc/archive/refs/tags/v1.44.0.tar.gz",
-        ],
+        remote = "https://github.com/grpc/grpc",
+        tag = "v1.45.0",
     )
 
     tf_http_archive(
@@ -722,10 +717,11 @@ def _tf_repositories():
         ],
     )
 
-    tf_http_archive(
+    http_archive(
         name = "rules_python",
-        sha256 = "aa96a691d3a8177f3215b14b0edc9641787abaaa30363a080165d06ab65e1161",
-        urls = tf_mirror_urls("https://github.com/bazelbuild/rules_python/releases/download/0.0.1/rules_python-0.0.1.tar.gz"),
+        sha256 = "9fcf91dbcc31fde6d1edb15f117246d912c33c36f44cf681976bd886538deba6",
+        strip_prefix = "rules_python-0.8.0",
+        url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.8.0.tar.gz",
     )
 
     tf_http_archive(
@@ -813,14 +809,6 @@ def _tf_repositories():
         strip_prefix = "boost_1_76_0",
         build_file = "//third_party:boost.BUILD",
         urls = tf_mirror_urls("https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.gz"),
-    )
-
-    tf_http_archive(
-        name = "jemalloc",
-        sha256 = "ed51b0b37098af4ca6ed31c22324635263f8ad6471889e0592a9c0dba9136aea",
-        strip_prefix = "jemalloc-5.2.1",
-        build_file = "//third_party:jemalloc.BUILD",
-        urls = tf_mirror_urls("https://github.com/jemalloc/jemalloc/archive/5.2.1.tar.gz"),
     )
 
     FOLLY_VERSION = "2022.01.24.00"
@@ -1146,23 +1134,16 @@ def _tf_repositories():
 
     http_archive(
         name = "jemalloc",
-        urls = [
-            "https://github.com/jemalloc/jemalloc/archive/{}.tar.gz".format("5.2.1"),
-        ],
-        strip_prefix = "jemalloc-" + "5.2.1",
+        sha256 = "ed51b0b37098af4ca6ed31c22324635263f8ad6471889e0592a9c0dba9136aea",
+        strip_prefix = "jemalloc-5.2.1",
         build_file = Label("//third_party:jemalloc.BUILD"),
+        urls = ["https://github.com/jemalloc/jemalloc/archive/5.2.1.tar.gz"],
     )
 
-    ARROW_VERSION = "f8689a12bb7e4ee9861456c1629637bbf8d5d11c"
+    ARROW_VERSION = "18e7cbf75f9b2cb58571a33f0dbd8b4ed954f23b"
     http_archive(
         name = "com_github_apache_arrow",
-        build_file = "//third_party/arrow:arrow.BUILD",
-        # patch_cmds = [
-        #     # TODO: Remove the fowllowing once arrow issue is resolved.
-        #     """sed -i.bak 's/type_traits/std::max<int16_t>(sizeof(int16_t), type_traits/g' cpp/src/parquet/column_reader.cc""",
-        #     """sed -i.bak 's/value_byte_size/value_byte_size)/g' cpp/src/parquet/column_reader.cc""",
-        # ],
-        # sha256 = "a27971e2a71c412ae43d998b7b6d06201c7a3da382c804dcdc4a8126ccbabe67",
+        build_file = Label("//third_party/arrow:arrow.BUILD"),
         strip_prefix = "arrow-" + ARROW_VERSION,
         urls = [
             "https://github.com/apache/arrow/archive/{}.zip".format(ARROW_VERSION),
@@ -1485,10 +1466,10 @@ def _tf_repositories():
         build_file = "//third_party:dlpack.BUILD",
     )
 
-    http_archive(
+    git_repository(
         name = "com_grail_bazel_compdb",
-        strip_prefix = "bazel-compilation-database-0.5.2",
-        urls = ["https://github.com/grailbio/bazel-compilation-database/archive/0.5.2.tar.gz"],
+        remote = "https://github.com/grailbio/bazel-compilation-database",
+        tag = "0.5.2",
     )
 
 def workspace():

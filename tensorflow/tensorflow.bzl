@@ -3159,7 +3159,6 @@ def tf_python_pybind_static_deps():
         "@curl//:__subpackages__",
         "@dlpack//:__subpackages__",
         "@double_conversion//:__subpackages__",
-        "@eigen_archive//:__subpackages__",
         "@farmhash_archive//:__subpackages__",
         "@farmhash_gpu_archive//:__subpackages__",
         "@fft2d//:__subpackages__",

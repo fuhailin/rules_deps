@@ -220,7 +220,6 @@ tf_native_cc_shared_library(
         # copybara:comment_begin(oss only)
         "@bazel_tools//:__subpackages__",
         "@com_google_absl//:__subpackages__",
-        "@eigen_archive//:__subpackages__",
         "@hwloc//:__subpackages__",
         "@local_config_cuda//:__subpackages__",
         "@nsync//:__subpackages__",
