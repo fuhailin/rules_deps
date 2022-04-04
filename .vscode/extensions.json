@@ -1,6 +1,9 @@
 {
     "recommendations": [
         "natizyskunk.sftp",
-        "llvm-vs-code-extensions.vscode-clangd"
+        "llvm-vs-code-extensions.vscode-clangd",
+        "ms-vscode-remote.remote-containers",
+        "vadimcn.vscode-lldb",
+        "bazelbuild.vscode-bazel"
     ]
 }

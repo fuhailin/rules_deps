@@ -50,3 +50,7 @@ xcuserdata
 src/main/fib_main.out.dSYM/Contents
 *.out
 sftp.json
+myexamples
+src
+dockerfiles
+*.xz

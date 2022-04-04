@@ -99,11 +99,13 @@ build_test(
 build_test(
     name = "build_test_linux",
     targets = [
+        "@nlohmann_json_lib//:nlohmann_json",
+        "@boost//:boost",
+
         # "@jemalloc",
         "@llvm-project//clang:clang-format",
         # "@com_github_apache_arrow//:arrow",
         # "@com_github_facebook_zstd//:zstd",
-        # "@com_github_facebook_rocksdb//:rocksdb",
         # "@io_opentelemetry_cpp//:opentelemetry",
         # "@com_github_facebookincubator_fizz//:fizz",
         # "@com_github_facebook_wangle//:wangle",
@@ -160,7 +162,7 @@ build_test(
         "@boost//:json",
         "@boost//:locale",
         "@boost//:log",
-        "@boost//:math",  #libboost_math_c99.a
+        # "@boost//:math",  #libboost_math_c99.a
         "@boost//:mpi",
         "@boost//:nowide",
         "@boost//:program_options",

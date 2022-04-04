@@ -40,4 +40,5 @@
         "--enable-config",
         "--fallback-style=WebKit"
     ],
+    // "docker.host": "ssh://root@10.11.11.107",
 }
