@@ -58,6 +58,10 @@
     "bazelbuild.vscode-bazel",
     "llvm-vs-code-extensions.vscode-clangd",
     "webfreak.debug",
-    "ms-python.python"
-  ]
+    "ms-python.python",
+  ],
+  // "workspaceMount": "source=remote-workspace,target=/workspace,type=volume",
+  // "workspaceMount": "source=/absolute/path/on/remote/machine,target=/workspace,type=bind,consistency=cached",
+  // "workspaceFolder": "/workspace",
+  // "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
 }
