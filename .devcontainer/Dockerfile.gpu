@@ -57,7 +57,7 @@ RUN apt-get -y install xz-utils unzip \
     aria2
 
 # Install oh-my-zsh now
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Install LLVM
 # RUN bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
