@@ -32,6 +32,7 @@ RUN apt-get -y install --no-install-recommends lsb-release software-properties-c
     wget \
     vim \
     build-essential \
+    libtool automake \
     pkg-config \
     xz-utils unzip \
     bzip2 \
@@ -63,17 +64,26 @@ RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master
 ARG LLVM_VERSION=14.0.0-x86_64-linux-gnu-ubuntu-18.04
 ENV LLVM_HOME=/opt/llvm-14
 ENV PATH=$PATH:$LLVM_HOME/bin
-RUN aria2c -s12 \
-    -x12 \
-    https://rec-deeprec.oss-cn-beijing.aliyuncs.com/cpp3rd/clang%2Bllvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
-    -d /tmp/library-scripts \
-    --download-result=full
+RUN wget https://rec-deeprec.oss-cn-beijing.aliyuncs.com/cpp3rd/clang%2Bllvm-14.0.0-x86_64-linux-gnu-ubuntu-18.04.tar.xz \
+    -P /tmp/library-scripts
 RUN mkdir -p /opt/llvm-14 && \
     tar -xvf /tmp/library-scripts/clang+llvm-${LLVM_VERSION}.tar.xz && \
     mv clang+llvm-${LLVM_VERSION}/* /opt/llvm-14/ && \
     rm -rf clang+llvm-${LLVM_VERSION}
 
-# ENV PATH=/usr/lib/llvm-14/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV CLANG_FORMAT=$LLVM_HOME/bin/clang-format
+
+# Install linuxbrew
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+ENV PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
+ENV MANPATH=/home/linuxbrew/.linuxbrew/share/man:$MANPATH
+ENV INFOPATH=/home/linuxbrew/.linuxbrew/share/info:$INFOPATH
+ENV BREW_DIR=/home/linuxbrew/
+RUN brew install buildifier
+
+RUN apt-get -y install bison \
+    byacc \
+    flex \
+    libssl-dev
 
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts

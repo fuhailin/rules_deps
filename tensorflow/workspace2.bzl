@@ -1209,7 +1209,7 @@ def _tf_repositories():
         name = "rules_bison",
         remote = "https://github.com/jmillikin/rules_bison",
         tag = "v0.2",
-        # patch_cmds = ["sed -i '83d' bison/bison.bzl"],
+        patch_cmds = ["sed -i '83d' bison/bison.bzl"],
     )
 
     http_archive(
@@ -1222,7 +1222,7 @@ def _tf_repositories():
         name = "rules_flex",
         urls = ["https://github.com/jmillikin/rules_flex/releases/download/v0.2/rules_flex-v0.2.tar.xz"],
         sha256 = "f1685512937c2e33a7ebc4d5c6cf38ed282c2ce3b7a9c7c0b542db7e5db59d52",
-        # patch_cmds = ["sed -i '76d' flex/flex.bzl"],
+        patch_cmds = ["sed -i '76d' flex/flex.bzl"],
     )
 
     http_archive(

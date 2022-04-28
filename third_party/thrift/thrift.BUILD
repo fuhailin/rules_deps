@@ -109,6 +109,10 @@ configure_make(
     autogen_command = "./bootstrap.sh",
     configure_in_place = True,
     configure_options = [
+        "--without-java",
+        "--without-kotlin",
+        "--without-python",
+        "--without-py3",
         "--with-boost=no",
         "--with-boost=$EXT_BUILD_DEPS/boost",
     ],
