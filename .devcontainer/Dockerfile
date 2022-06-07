@@ -1,10 +1,10 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-COPY library-scripts/sources-20.04LTS.list /etc/apt/sources.list
+COPY library-scripts/sources-22.04LTS.list /etc/apt/sources.list
 RUN rm -rf /etc/apt/sources.list.d/* && \
     ldconfig && apt-get update
 
@@ -23,7 +23,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
-
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get -y install --no-install-recommends lsb-release software-properties-common \
