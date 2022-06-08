@@ -16,3 +16,5 @@ BAZELRC_FILE=~/.bazelrc bazel/setup_clang.sh /opt/llvm-14
 #echo "build --symlink_prefix=/" >> ~/.bazelrc
 
 [[ -n "${BUILD_DIR}" ]] && sudo chown -R "$(id -u):$(id -g)" "${BUILD_DIR}"
+
+[[ -n "${BREW_DIR}" ]] && sudo chown -R "$(id -u):$(id -g)" "${BREW_DIR}"

@@ -1,12 +1,13 @@
 # Description:
 #   Apache Arrow library
-load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
 
 package(default_visibility = ["//visibility:public"])
 
 licenses(["notice"])  # Apache 2.0
 
 exports_files(["LICENSE.txt"])
+
+load("@flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
 
 flatbuffer_cc_library(
     name = "arrow_format",
@@ -83,6 +84,8 @@ cc_library(
             "cpp/src/**/stream_to_file.cc",
             "cpp/src/arrow/util/bpacking_avx2.cc",
             "cpp/src/arrow/util/bpacking_avx512.cc",
+            "cpp/src/arrow/util/bpacking_neon.cc",
+            "cpp/src/arrow/util/tracing_internal.cc",
         ],
     ),
     hdrs = [
@@ -90,10 +93,7 @@ cc_library(
         "cpp/src/arrow/util/config.h",
         "cpp/src/parquet/parquet_version.h",
     ],
-    copts = [
-        "-std=c++17",
-        "-march=native",
-    ],
+    copts = [],
     defines = [
         "ARROW_WITH_BROTLI",
         "ARROW_WITH_SNAPPY",
@@ -117,19 +117,15 @@ cc_library(
     deps = [
         ":arrow_format",
         "@boringssl//:crypto",
-        "@com_github_apache_thrift//:thrift",
-        "@com_github_facebook_zstd//:zstd",
-        "@com_github_google_brotli//:brotli",
-        "@com_github_google_double_conversion//:double-conversion",
-        "@com_github_google_snappy//:snappy",
-        "@com_github_tencent_rapidjson//:rapidjson",
-        "@com_github_xtensorstack_xsimd//:xsimd",
-        "@com_google_protobuf//:protobuf",
-        "@io_opentelemetry_cpp//api",
-        "@io_opentelemetry_cpp//exporters/ostream:ostream_span_exporter",
-        "@io_opentelemetry_cpp//exporters/otlp:otlp_http_exporter",
+        "@brotli",
+        "@bzip2",
+        "@double-conversion",
         "@lz4",
-        "@org_bzip_bzip2//:bzip2",
+        "@rapidjson",
+        "@snappy",
+        "@thrift",
+        "@xsimd",
         "@zlib",
+        "@zstd",
     ],
 )

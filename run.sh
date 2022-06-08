@@ -10,7 +10,7 @@ clang++ --version
 bazel version
 
 # Build Tensorflow
-# ./configure &&
-bazel build --config=clang \
+./configure &&
+bazel build \
     //:build_test \
     //:build_test_linux

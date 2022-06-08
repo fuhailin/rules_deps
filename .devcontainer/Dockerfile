@@ -1,10 +1,10 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 ENV TZ=Asia/Shanghai \
     DEBIAN_FRONTEND=noninteractive \
     LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-COPY library-scripts/sources-22.04LTS.list /etc/apt/sources.list
+COPY library-scripts/sources-20.04LTS.list /etc/apt/sources.list
 RUN rm -rf /etc/apt/sources.list.d/* && \
     ldconfig && apt-get update
 
@@ -82,7 +82,7 @@ RUN brew install buildifier
 
 RUN apt-get -y install bison \
     byacc \
-    flex \
-    libssl-dev
+    flex
+# libssl-dev
 
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
