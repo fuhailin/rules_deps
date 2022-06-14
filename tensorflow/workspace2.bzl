@@ -984,7 +984,7 @@ def _tf_repositories():
     new_git_repository(
         name = "com_github_apache_thrift",
         remote = "https://github.com/apache/thrift",
-        branch = "master",
+        branch = "0.16.0",
         build_file = Label("//third_party/thrift:thrift.BUILD"),
     )
 
@@ -1146,9 +1146,9 @@ def _tf_repositories():
         name = "com_github_apache_arrow",
         sha256 = "57e13c62f27b710e1de54fd30faed612aefa22aa41fa2c0c3bacd204dd18a8f3",
         build_file = Label("//third_party/arrow:arrow.BUILD"),
-        strip_prefix = "arrow-" + ARROW_VERSION,
+        strip_prefix = "arrow-apache-arrow-" + ARROW_VERSION,
         urls = [
-            "https://github.com/apache/arrow/archive/{}.zip".format(ARROW_VERSION),
+            "https://github.com/apache/arrow/archive/apache-arrow-{}.tar.gz".format(ARROW_VERSION),
         ],
     )
 

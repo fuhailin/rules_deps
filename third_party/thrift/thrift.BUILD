@@ -117,6 +117,9 @@ configure_make(
         "--with-boost=$EXT_BUILD_DEPS/boost",
     ],
     lib_source = ":all_srcs",
+    linkopts = [
+        "-ldl",
+    ],
     out_static_libs = [
         "libthrift.a",
         "libthriftnb.a",
@@ -125,5 +128,6 @@ configure_make(
     deps = [
         "@boost",
         "@libevent",
+        "@openssl",
     ],
 )

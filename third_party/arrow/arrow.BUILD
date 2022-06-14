@@ -1,66 +1,131 @@
-load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+# Description:
+#   Apache Arrow library
+
+load("@com_github_google_flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "all_srcs",
-    srcs = glob(["**"]),
+licenses(["notice"])  # Apache 2.0
+
+exports_files(["LICENSE.txt"])
+
+flatbuffer_cc_library(
+    name = "arrow_format",
+    srcs = [
+        "cpp/src/arrow/ipc/feather.fbs",
+        "format/File.fbs",
+        "format/Message.fbs",
+        "format/Schema.fbs",
+        "format/SparseTensor.fbs",
+        "format/Tensor.fbs",
+    ],
+    flatc_args = [
+        "--scoped-enums",
+        "--gen-object-api",
+    ],
+    out_prefix = "cpp/src/generated/",
 )
 
-cmake(
+genrule(
+    name = "arrow_util_config",
+    srcs = ["cpp/src/arrow/util/config.h.cmake"],
+    outs = ["cpp/src/arrow/util/config.h"],
+    cmd = ("sed " +
+           "-e 's/@ARROW_VERSION_MAJOR@/3/g' " +
+           "-e 's/@ARROW_VERSION_MINOR@/0/g' " +
+           "-e 's/@ARROW_VERSION_PATCH@/0/g' " +
+           "-e 's/cmakedefine ARROW_USE_NATIVE_INT128/undef ARROW_USE_NATIVE_INT128/g' " +
+           "-e 's/cmakedefine/define/g' " +
+           "$< >$@"),
+)
+
+genrule(
+    name = "parquet_version_h",
+    srcs = ["cpp/src/parquet/parquet_version.h.in"],
+    outs = ["cpp/src/parquet/parquet_version.h"],
+    cmd = ("sed " +
+           "-e 's/@PARQUET_VERSION_MAJOR@/1/g' " +
+           "-e 's/@PARQUET_VERSION_MINOR@/5/g' " +
+           "-e 's/@PARQUET_VERSION_PATCH@/1/g' " +
+           "$< >$@"),
+)
+
+cc_library(
     name = "arrow",
-    build_args = [
-        "-j `nproc`",
+    srcs = glob(
+        [
+            "cpp/src/arrow/*.cc",
+            "cpp/src/arrow/array/*.cc",
+            "cpp/src/arrow/csv/*.cc",
+            "cpp/src/arrow/io/*.cc",
+            "cpp/src/arrow/ipc/*.cc",
+            "cpp/src/arrow/json/*.cc",
+            "cpp/src/arrow/tensor/*.cc",
+            "cpp/src/arrow/util/*.cc",
+            "cpp/src/arrow/vendored/musl/strptime.c",
+            "cpp/src/arrow/vendored/optional.hpp",
+            "cpp/src/arrow/vendored/string_view.hpp",
+            "cpp/src/arrow/vendored/variant.hpp",
+            "cpp/src/arrow/**/*.h",
+            "cpp/src/parquet/**/*.h",
+            "cpp/src/parquet/**/*.cc",
+            "cpp/src/generated/*.h",
+            "cpp/src/generated/*.cpp",
+        ],
+        exclude = [
+            "cpp/src/**/*_benchmark.cc",
+            "cpp/src/**/*_main.cc",
+            "cpp/src/**/*_nossl.cc",
+            "cpp/src/**/*_test.cc",
+            "cpp/src/**/test_*.cc",
+            "cpp/src/**/*hdfs*.cc",
+            "cpp/src/**/*fuzz*.cc",
+            "cpp/src/**/file_to_stream.cc",
+            "cpp/src/**/stream_to_file.cc",
+            "cpp/src/arrow/util/bpacking_avx2.cc",
+            "cpp/src/arrow/util/bpacking_avx512.cc",
+            "cpp/src/arrow/util/bpacking_neon.cc",
+            "cpp/src/arrow/util/tracing_internal.cc",
+        ],
+    ),
+    hdrs = [
+        # declare header from above genrule
+        "cpp/src/arrow/util/config.h",
+        "cpp/src/parquet/parquet_version.h",
     ],
-    cache_entries = {
-        # Workaround for the issue with statically linked libstdc++
-        # using -l:libstdc++.a.
-        # "CMAKE_CXX_FLAGS": "-Dredacted=redacted",
-        # "CMAKE_CXX_FLAGS": "-D__DATE__=\"redacted\"",
-        "CMAKE_BUILD_TYPE": "Release"
-        "ARROW_BUILD_SHARED": "OFF",
-        "ARROW_BUILD_STATIC": "ON",
-        "ARROW_BUILD_TESTS": "OFF",
-        "ARROW_JEMALLOC": "ON",
-        "ARROW_JEMALLOC_INCLUDE_DIR": "$EXT_BUILD_DEPS/jemalloc",
-        # "ARROW_SIMD_LEVEL": "AVX2",
-        # "ARROW_DATASET": "ON",
-        # "ARROW_FILESYSTEM": "ON",
-        # "ARROW_IPC": "ON",
-        # "ARROW_COMPUTE": "ON",
-        # "ARROW_CUDA": "OFF",
-        # "ARROW_CSV": "ON",
-        # "ARROW_JSON": "ON",
-        # "ARROW_PARQUET": "ON",
-        # "ARROW_WITH_SNAPPY": "OFF",
-        # "ARROW_WITH_RE2": "OFF",
-        # "ARROW_WITH_UTF8PROC": "OFF",
-        # "ARROW_WITH_ZSTD": "ON",
-        # "ARROW_TENSORFLOW": "OFF",
-        # "ARROW_HDFS": "ON",
-        # "__DATE__": "redacted",
-    },
-    # env = {"CMAKE_CXX_FLAGS": "-Dredacted=\"redacted\""},
-    # env = {"CMAKE_CXX_FLAGS": r"""-DDATE='\"redacted\"' -DTIMESTAMP='\"redacted\"' -DTIME='\"redacted\"'"""},
-    # env = {"CXXFLAGS": "-Dredacted='\\\"redacted\\\"'"},
-    lib_source = ":all_srcs",
-    out_static_libs = ["libarrow.a"],
-    # out_shared_libs = ["libarrow.so"],
-    working_directory = "cpp",
+    copts = [],
+    defines = [
+        "ARROW_WITH_BROTLI",
+        "ARROW_WITH_SNAPPY",
+        "ARROW_WITH_LZ4",
+        "ARROW_WITH_ZLIB",
+        "ARROW_WITH_ZSTD",
+        "ARROW_WITH_BZ2",
+        "ARROW_STATIC",
+        "ARROW_EXPORT=",
+        "PARQUET_STATIC",
+        "PARQUET_EXPORT=",
+        "WIN32_LEAN_AND_MEAN",
+    ],
+    includes = [
+        "cpp/src",
+        "cpp/src/arrow/vendored/xxhash",
+    ],
+    textual_hdrs = [
+        "cpp/src/arrow/vendored/xxhash/xxhash.c",
+    ],
     deps = [
-        "@jemalloc",
-        # "@com_github_xtensorstack_xsimd//:xsimd",
-        # "@apache_thrift//:thrift",
-        # "@boringssl//:crypto",
-        # "@brotli",
-        # "@org_bzip_bzip2//:bzip2",
-        # "@com_github_google_double_conversion//:double-conversion",
-        # "@jemalloc",
-        # "@lz4",
-        # "@rapidjson",
-        # "@com_github_google_snappy//:snappy",
-        # "@xsimd",
-        # "@zlib",
-        # "@com_github_facebook_zstd//:zstd",
+        ":arrow_format",
+        "@boringssl//:crypto",
+        "@com_github_apache_thrift//:thrift",
+        "@com_github_facebook_zstd//:zstd",
+        "@com_github_google_brotli//:brotli",
+        "@com_github_google_double_conversion//:double-conversion",
+        "@com_github_google_snappy//:snappy",
+        "@com_github_tencent_rapidjson//:rapidjson",
+        "@com_github_xtensorstack_xsimd//:xsimd",
+        "@lz4",
+        "@org_bzip_bzip2//:bzip2",
+        "@zlib",
     ],
 )
