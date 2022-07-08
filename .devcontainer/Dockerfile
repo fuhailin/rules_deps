@@ -82,7 +82,8 @@ RUN brew install buildifier
 
 RUN apt-get -y install bison \
     byacc \
-    flex
+    flex \
+    gperf
 # libssl-dev
 
 RUN apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts

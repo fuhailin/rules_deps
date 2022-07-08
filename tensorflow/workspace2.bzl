@@ -438,10 +438,10 @@ def _tf_repositories():
     tf_http_archive(
         name = "nsync",
         patch_file = ["//third_party:nsync.patch"],
-        sha256 = "caf32e6b3d478b78cff6c2ba009c3400f8251f646804bcb65465666a9cea93c4",
-        strip_prefix = "nsync-1.22.0",
+        sha256 = "2be9dbfcce417c7abcc2aa6fee351cd4d292518d692577e74a2c6c05b049e442",
+        strip_prefix = "nsync-1.25.0",
         system_build_file = "//third_party/systemlibs:nsync.BUILD",
-        urls = tf_mirror_urls("https://github.com/google/nsync/archive/1.22.0.tar.gz"),
+        urls = tf_mirror_urls("https://github.com/google/nsync/archive/1.25.0.tar.gz"),
     )
 
     http_archive(
@@ -527,9 +527,9 @@ def _tf_repositories():
         name = "nccl_archive",
         build_file = "//third_party:nccl/archive.BUILD",
         patch_file = ["//third_party/nccl:archive.patch"],
-        sha256 = "3ae89ddb2956fff081e406a94ff54ae5e52359f5d645ce977c7eba09b3b782e6",
-        strip_prefix = "nccl-2.8.3-1",
-        urls = tf_mirror_urls("https://github.com/nvidia/nccl/archive/v2.8.3-1.tar.gz"),
+        sha256 = "49b4fbfeebf1f62f6ceb69e72504045d8d1b4e7609e3c2477906f3004c7e2d82",
+        strip_prefix = "nccl-2.12.12-1",
+        urls = tf_mirror_urls("https://github.com/nvidia/nccl/archive/v2.12.12-1.tar.gz"),
     )
 
     java_import_external(
@@ -640,10 +640,10 @@ def _tf_repositories():
 
     http_archive(
         name = "com_github_google_double_conversion",
-        urls = ["https://github.com/google/double-conversion/archive/v3.1.5.tar.gz"],
+        urls = ["https://github.com/google/double-conversion/archive/v3.2.0.tar.gz"],
         build_file = Label("//third_party:double-conversion.BUILD"),
-        sha256 = "a63ecb93182134ba4293fd5f22d6e08ca417caafa244afaa751cbfddf6415b13",
-        strip_prefix = "double-conversion-3.1.5",
+        sha256 = "3dbcdf186ad092a8b71228a5962009b5c96abde9a315257a3452eb988414ea3b",
+        strip_prefix = "double-conversion-3.2.0",
     )
 
     tf_http_archive(
