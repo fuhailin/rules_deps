@@ -72,8 +72,8 @@ RUN mkdir -p /opt/llvm-14 && \
 
 ENV CLANG_FORMAT=$LLVM_HOME/bin/clang-format
 
-# Install linuxbrew
-RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+# Install Homebrew
+RUN /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ENV PATH=/home/linuxbrew/.linuxbrew/bin:$PATH
 ENV MANPATH=/home/linuxbrew/.linuxbrew/share/man:$MANPATH
 ENV INFOPATH=/home/linuxbrew/.linuxbrew/share/info:$INFOPATH
